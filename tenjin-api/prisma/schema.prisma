@@ -1,0 +1,128 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model Student {
+  id         String       @id @unique @default(cuid())
+  email      String       @unique
+  password   String
+  name       String
+  surname    String
+  phone      String?      @unique
+  points     Int?
+  Enrollment Enrollment[]
+  Grade      Grade[]
+  Absence    Absence[]
+}
+
+model Teacher {
+  id         String       @id @unique @default(cuid())
+  email      String       @unique
+  password   String
+  name       String
+  surname    String
+  phone      String?      @unique
+  Employment Employment[]
+  Teaching   Teaching[]
+}
+
+model School {
+  id         String       @id @unique @default(cuid())
+  email      String       @unique
+  password   String
+  name       String       @unique
+  district   String?
+  town       String?
+  address    String?
+  phone      String?      @unique
+  Classroom  Classroom[]
+  Employment Employment[]
+  Enrollment Enrollment[]
+  Teaching   Teaching[]
+}
+
+model Subject {
+  id          String     @id @unique @default(cuid())
+  name        String
+  yearLevel   String
+  weeklyHours Int?
+  Teaching    Teaching[]
+}
+
+model Classroom {
+  id        String     @id @unique @default(cuid())
+  name      String
+  yearLevel String
+  school    School     @relation(fields: [schoolId], references: [id])
+  schoolId  String
+  Teaching  Teaching[]
+}
+
+model Employment {
+  id        String  @id @unique @default(cuid())
+  school    School  @relation(fields: [schoolId], references: [id])
+  year      String
+  teacher   Teacher @relation(fields: [teacherId], references: [id])
+  schoolId  String
+  teacherId String
+}
+
+model Enrollment {
+  id        String  @id @unique @default(cuid())
+  school    School  @relation(fields: [schoolId], references: [id])
+  year      String
+  student   Student @relation(fields: [studentId], references: [id])
+  yearLevel String
+  schoolId  String
+  studentId String
+}
+
+model Teaching {
+  id          String     @id @unique @default(cuid())
+  school      School     @relation(fields: [schoolId], references: [id])
+  year        String?
+  subject     Subject    @relation(fields: [subjectId], references: [id])
+  teacher     Teacher?   @relation(fields: [teacherId], references: [id])
+  classroom   Classroom? @relation(fields: [classroomId], references: [id])
+  schoolId    String
+  subjectId   String
+  teacherId   String?
+  classroomId String?
+  Grade       Grade[]
+  Absence     Absence[]
+  Task        Task[]
+}
+
+model Grade {
+  id         String    @id @unique @default(cuid())
+  date       DateTime? @default(now())
+  grade      Decimal
+  student    Student   @relation(fields: [studentId], references: [id])
+  teaching   Teaching  @relation(fields: [teachingId], references: [id])
+  studentId  String
+  teachingId String
+}
+
+model Absence {
+  id         String    @id @unique @default(cuid())
+  date       DateTime? @default(now())
+  student    Student   @relation(fields: [studentId], references: [id])
+  teaching   Teaching  @relation(fields: [teachingId], references: [id])
+  studentId  String
+  teachingId String
+}
+
+model Task {
+  id         String    @id @unique @default(cuid())
+  date       DateTime? @default(now())
+  comment    String
+  points     Int
+  active     Boolean?  @default(true)
+  teaching   Teaching  @relation(fields: [teachingId], references: [id])
+  teachingId String
+}

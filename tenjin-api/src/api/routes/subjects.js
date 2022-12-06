@@ -1,6 +1,7 @@
 const router = require('express').Router();
-const  { getAssignments, addAssignment } = require('../controllers/subjectsController')
+const  { massPopulation, getAssignments, addAssignment } = require('../controllers/subjectsController')
 
+router.post('/', massPopulation);
 router.get('/:subjectId/assignments', getAssignments);
 router.post('/:subjectId/assignments', addAssignment);
 

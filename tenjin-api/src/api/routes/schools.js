@@ -1,19 +1,20 @@
 const router = require('express').Router();
-const  { addSchool, getSchool, getStudents, addStudent, getTeachers, addTeacher, getClasses, addClass, getSubjects } = require('../controllers/schoolsController')
+const  { addSchool, getSchool, getStudents, addStudent, getTeachers, addTeacher, getClasses, addClass, getSubjects } = require('../controllers/schoolsController');
+const  { authenticate, verifyRoleSet } = require('../middlewares/verifyToken');
 
-router.post('/', addSchool)
-router.get('/:schoolId', getSchool);
+router.post('/', addSchool);
+router.get('/profile', authenticate, verifyRoleSet(["school"]), getSchool);
 
-router.get('/:schoolId/students', getStudents);
-router.post('/:schoolId/students', addStudent);
+router.get('/students', authenticate, verifyRoleSet(["school"]), getStudents);
+router.post('/students', authenticate, verifyRoleSet(["school"]), addStudent);
 
-router.get('/:schoolId/teachers', getTeachers);
-router.post('/:schoolId/teachers', addTeacher);
+router.get('/teachers', authenticate, verifyRoleSet(["school"]), getTeachers);
+router.post('/teachers', authenticate, verifyRoleSet(["school"]), addTeacher);
 
-router.get('/:schoolId/classes', getClasses);
-router.post('/:schoolId/classes', addClass);
+router.get('/classes', authenticate, verifyRoleSet(["school"]), getClasses);
+router.post('/classes', authenticate, verifyRoleSet(["school"]), addClass);
 
-router.get('/:schoolId/subjects', getSubjects);
+router.get('/subjects', authenticate, verifyRoleSet(["school"]), getSubjects);
 
 
 module.exports = router;

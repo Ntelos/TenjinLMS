@@ -7,5 +7,10 @@ router.use('/classes', require('./classes'));
 router.use('/subjects', require('./subjects'));
 router.use('/login', require('./login'));
 
+// router.use('/', require('./general'));
+// router.use('/school', require('./school'));
+// router.use('/teacher', require('./teacher'));
+// router.use('/student', require('./student'));
+
 
 module.exports = router;

@@ -93,19 +93,88 @@ const enrollStudent = (async (req, res) => {
 })
 
 const getTeachers = (async (req, res) => {
-    
+    try {
+        const schoolId = req.user.id;
+        
+        const teachers = await prisma.school.findUnique({
+            where: {
+                id: schoolId
+            },
+            select: {
+                Employment: {
+                    select: {
+                        teacher: true
+                    }
+                }
+            }
+        });
+
+        return res.status(200).json({success: {teachers: teachers.Employment} });
+    } catch (e) {
+        return res.status(500).json({error: e});
+    }
 })
 
 const employTeacher = (async (req, res) => {
-    
+    try {
+        const schoolId = req.user.id;
+        const teacherEmail = req.body.email;
+
+        const teacher = await prisma.teacher.findUnique({
+            where: {
+                email: teacherEmail
+            },
+            select: {
+                id: true
+            }
+        });
+        
+        const employment = await prisma.employment.create({
+            data: {
+                year: req.body.year,
+                schoolId: schoolId,
+                teacherId: teacher.id
+            }
+        });
+
+        return res.status(200).json({success: {employmentId: employment.id} });
+    } catch (e) {
+        return res.status(500).json({error: e});
+    }
 })
 
 const getClassrooms = (async (req, res) => {
-    
+    try {
+        const schoolId = req.user.id;
+        
+        const classrooms = await prisma.classroom.findMany({
+            where: {
+                schoolId: schoolId
+            }
+        });
+
+        return res.status(200).json({success: {classrooms: classrooms} });
+    } catch (e) {
+        return res.status(500).json({error: e});
+    }
 })
 
 const addClassroom = (async (req, res) => {
-    
+    try {
+        const schoolId = req.user.id;
+        
+        const classroom = await prisma.classroom.create({
+            data: {
+                name: req.body.name,
+                yearLevel: req.body.yearLevel,
+                schoolId: schoolId
+            }
+        });
+
+        return res.status(200).json({success: {classroomId: classroom.id} });
+    } catch (e) {
+        return res.status(500).json({error: e});
+    }
 })
 
 const getStudentsOfClassroom = (async (req, res) => {
@@ -129,7 +198,73 @@ const getSubjects = (async (req, res) => {
 })
 
 const assignTeaching = (async (req, res) => {
-    
+    try {
+        const schoolId = req.user.id;
+        const year = req.body.year;
+        const teacherEmail = req.body.teacherEmail;
+        const subjectName = req.body.subject;
+        const classroomName = req.body.classroom;
+
+        const teacher = await prisma.teacher.findUnique({
+            where: {
+                email: teacherEmail
+            },
+            select: {
+                id: true
+            }
+        });
+
+        const classroom = await prisma.classroom.findFirst({
+            where: {
+                name: classroomName,
+                schoolId: schoolId
+            },
+            select: {
+                id: true,
+                yearLevel: true
+            }
+        });
+
+        const subject = await prisma.subject.findFirst({
+            where: {
+                name: subjectName,
+                yearLevel: classroom.yearLevel
+            },
+            select: {
+                id: true
+            }
+        })
+        
+        const teaching = await prisma.teaching.create({
+            data: {
+                year: year,
+                schoolId: schoolId,
+                subjectId: subject.id,
+                teacherId: teacher.id,
+                classroomId: classroom.id
+            }
+        });
+
+        return res.status(200).json({success: {teachingId: teaching.id} });
+    } catch (e) {
+        return res.status(500).json({error: e});
+    }
+})
+
+const getTeachings = (async (req, res) => {
+    try {
+        const schoolId = req.user.id;
+        
+        const teachings = await prisma.teaching.findMany({
+            where: {
+                schoolId: schoolId
+            }
+        });
+
+        return res.status(200).json({success: {teachings: teachings} });
+    } catch (e) {
+        return res.status(500).json({error: e});
+    }
 })
 
 
@@ -138,5 +273,5 @@ module.exports = {
     enrollStudent, getTeachers, employTeacher, 
     getClassrooms, addClassroom, getStudentsOfClassroom, 
     assignStudentToClassroom, getGradesOfStudent, 
-    getAbsencesOfStudent, getSubjects, assignTeaching
+    getAbsencesOfStudent, getSubjects, assignTeaching, getTeachings
 }

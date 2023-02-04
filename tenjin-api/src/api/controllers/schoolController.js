@@ -352,6 +352,11 @@ const getTeachings = (async (req, res) => {
         const teachings = await prisma.teaching.findMany({
             where: {
                 schoolId: schoolId
+            },
+            include: {
+                subject: true,
+                teacher: true,
+                classroom: true
             }
         });
 

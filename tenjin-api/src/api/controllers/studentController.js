@@ -30,6 +30,14 @@ const getStudent = (async (req, res) => {
         const student = await prisma.student.findUnique({
             where: {
                 id: studentId
+            },
+            include: {
+                classroom: true,
+                classroom: {
+                    include: {
+                        school: true
+                    }
+                }
             }
         });
 
@@ -59,23 +67,144 @@ const getPoints = (async (req, res) => {
 })
 
 const getClassroom = (async (req, res) => {
+    try {
+        const studentId = req.user.id;
 
+        const classroom = await prisma.student.findUnique({
+            where: {
+                id: studentId
+            },
+            select: {
+                classroom: true
+            }
+        });
+
+        return res.status(200).json({success: classroom});
+    } catch (e) {
+        return res.status(500).json({error: e});
+    }
 })
 
 const getGrades = (async (req, res) => {
+    try {
+        const studentId = req.user.id;
+        const year = req.body.year;
 
+        const grades = await prisma.grade.findMany({
+            where: {
+                studentId: studentId,
+                teaching: {
+                    year: year
+                }
+            },
+            include: {
+                teaching: true,
+                teaching: {
+                    include: {
+                        subject: true,
+                        teacher: true
+                    }
+                }
+            }
+        });
+
+        return res.status(200).json({success: grades});
+    } catch (e) {
+        return res.status(500).json({error: e});
+    }
 })
 
 const getAbsences = (async (req, res) => {
+    try {
+        const studentId = req.user.id;
+        const year = req.body.year;
 
+        const absences = await prisma.absence.findMany({
+            where: {
+                studentId: studentId,
+                teaching: {
+                    year: year
+                }
+            },
+            include: {
+                teaching: true,
+                teaching: {
+                    include: {
+                        subject: true,
+                        teacher: true
+                    }
+                }
+            }
+        });
+
+        return res.status(200).json({success: { count: absences.length, absences } });
+    } catch (e) {
+        return res.status(500).json({error: e});
+    }
 })
 
 const getSubjects = (async (req, res) => {
+    try {
+        const studentId = req.user.id;
+        const year = req.body.year;
+        
+        const classroom = await prisma.student.findUnique({
+            where: {
+                id: studentId
+            },
+            select: {
+                classroom: true
+            }
+        });
 
+        const subjects = await prisma.teaching.findMany({
+            where: {
+                classroomId: classroom.id,
+                year: year
+            },
+            select: {
+                subject: true
+            }
+        });
+
+        return res.status(200).json({success: subjects});
+    } catch (e) {
+        return res.status(500).json({error: e});
+    }
 })
 
-const getAssignments = (async (req, res) => {
+const getTasks = (async (req, res) => {
+    try {
+        const studentId = req.user.id;
+        const subjectName = req.body.subject;
+        const year = req.body.year;
 
+        const classroom = await prisma.student.findUnique({
+            where: {
+                id: studentId
+            },
+            select: {
+                classroom: true
+            }
+        });
+
+        const tasks = await prisma.teaching.findMany({
+            where: {
+                classroomId: classroom.id,
+                year: year,
+                subject: {
+                    name: subjectName
+                }
+            },
+            select: {
+                Task: true
+            }
+        });
+
+        return res.status(200).json({success: tasks});
+    } catch (e) {
+        return res.status(500).json({error: e});
+    }
 })
 
 
@@ -87,5 +216,5 @@ module.exports = {
     getGrades, 
     getAbsences, 
     getSubjects, 
-    getAssignments
+    getTasks
 }

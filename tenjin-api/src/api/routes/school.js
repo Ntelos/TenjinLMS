@@ -4,7 +4,7 @@ const  { addSchool, getSchool, getStudents,
          enrollStudent, getTeachers, employTeacher, 
          getClassrooms, addClassroom, getStudentsOfClassroom, 
          assignStudentToClassroom, getGradesOfStudent, 
-         getAbsencesOfStudent, getSubjects, assignTeaching, getTeachings } = require('../controllers/schoolController');
+         getAbsencesOfStudent, assignTeaching, getTeachings } = require('../controllers/schoolController');
 
 router.post('/', addSchool);
 router.get('/', authenticate, verifyRoleSet(["school"]), getSchool);
@@ -18,13 +18,11 @@ router.post('/teacher', authenticate, verifyRoleSet(["school"]), employTeacher);
 router.get('/classrooms', authenticate, verifyRoleSet(["school"]), getClassrooms);
 router.post('/classroom', authenticate, verifyRoleSet(["school"]), addClassroom);
 
-router.get('/classrooms/:classroomId/students', authenticate, verifyRoleSet(["school"]), getStudentsOfClassroom);
-router.post('/classrooms/:classroomId/student', authenticate, verifyRoleSet(["school"]), assignStudentToClassroom);
+router.get('/classrooms/students', authenticate, verifyRoleSet(["school"]), getStudentsOfClassroom);
+router.post('/classrooms/student', authenticate, verifyRoleSet(["school"]), assignStudentToClassroom);
 
-router.get('/students/:studentId/grades', authenticate, verifyRoleSet(["school"]), getGradesOfStudent);
-router.get('/students/:studentId/absences', authenticate, verifyRoleSet(["school"]), getAbsencesOfStudent);
-
-router.get('/subjects', authenticate, verifyRoleSet(["school"]), getSubjects);
+router.get('/students/grades', authenticate, verifyRoleSet(["school"]), getGradesOfStudent);
+router.get('/students/absences', authenticate, verifyRoleSet(["school"]), getAbsencesOfStudent);
 
 router.post('/teaching', authenticate, verifyRoleSet(["school"]), assignTeaching);
 router.get('/teachings', authenticate, verifyRoleSet(["school"]), getTeachings);

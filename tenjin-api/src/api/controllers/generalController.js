@@ -50,11 +50,47 @@ const login = (async (req, res) => {
     res.status(200).header('auth-token', token).json({success: {token: token}});
 })
 
+const getSchools = (async (req, res) => {
+    try {
+        const skipCount = req.body.skip;
+        const takeCount = req.body.count;
+
+        const schools = await prisma.school.findMany({
+            skip: skipCount,
+            take: takeCount
+        });
+
+        schools.forEach(school => exclude(school, ['password']));
+
+        return res.status(200).json({success: {count: schools.length, schools}});
+    } catch (e) {
+        return res.status(500).json({error: e});
+    }
+})
+
+const getTeachers = (async (req, res) => {
+    try {
+        const skipCount = req.body.skip;
+        const takeCount = req.body.count;
+
+        const teachers = await prisma.teacher.findMany({
+            skip: skipCount,
+            take: takeCount
+        });
+
+        teachers.forEach(teacher => exclude(teacher, ['password']));
+
+        return res.status(200).json({success: teachers});
+    } catch (e) {
+        return res.status(500).json({error: e});
+    }
+})
+
 const getSchoolInfo = (async (req, res) => {
     try {
         const schoolId = req.params.schoolId;
 
-        const school = await prisma.school.findUnique({
+        const school = await prisma.school.findUniqueOrThrow({
             where: {
                 id: schoolId
             }
@@ -88,8 +124,6 @@ const getTeacherInfo = (async (req, res) => {
                 }
             }
         });
-
-        //const teacherWithoutPassword = exclude(teacher, ['password']);
 
         return res.status(200).json({success: teacher});
     } catch (e) {
@@ -127,7 +161,9 @@ const addSubjects = (async (req, res) => {
 
 module.exports = {
     login, 
-    getSchoolInfo, 
+    getSchools,
+    getSchoolInfo,
+    getTeachers, 
     getTeacherInfo,
     addSubject,
     addSubjects

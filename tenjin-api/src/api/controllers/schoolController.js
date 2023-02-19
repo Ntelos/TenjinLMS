@@ -51,7 +51,9 @@ const getStudents = (async (req, res) => {
             select: {
                 Enrollment: {
                     select: {
-                        student: true
+                        student: true,
+                        year: true,
+                        yearLevel: true
                     }
                 }
             }
@@ -68,7 +70,7 @@ const enrollStudent = (async (req, res) => {
         const schoolId = req.user.id;
         const studentEmail = req.body.email;
 
-        const student = await prisma.student.findUnique({
+        const student = await prisma.student.findUniqueOrThrow({
             where: {
                 email: studentEmail
             },
@@ -120,7 +122,7 @@ const employTeacher = (async (req, res) => {
         const schoolId = req.user.id;
         const teacherEmail = req.body.email;
 
-        const teacher = await prisma.teacher.findUnique({
+        const teacher = await prisma.teacher.findUniqueOrThrow({
             where: {
                 email: teacherEmail
             },

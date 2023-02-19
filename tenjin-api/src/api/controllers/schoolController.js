@@ -43,13 +43,17 @@ const getSchool = (async (req, res) => {
 const getStudents = (async (req, res) => {
     try {
         const schoolId = req.user.id;
+        const givenYear = req.body.year;
         
         const students = await prisma.school.findUnique({
             where: {
-                id: schoolId
+                id: schoolId,
             },
             select: {
                 Enrollment: {
+                    where: {
+                        year: givenYear
+                    },
                     select: {
                         student: true,
                         year: true,
@@ -97,6 +101,7 @@ const enrollStudent = (async (req, res) => {
 const getTeachers = (async (req, res) => {
     try {
         const schoolId = req.user.id;
+        const givenYear = req.body.year;
         
         const teachers = await prisma.school.findUnique({
             where: {
@@ -104,8 +109,12 @@ const getTeachers = (async (req, res) => {
             },
             select: {
                 Employment: {
+                    where: {
+                        year: givenYear
+                    },
                     select: {
-                        teacher: true
+                        teacher: true,
+                        year: true
                     }
                 }
             }
@@ -152,6 +161,10 @@ const getClassrooms = (async (req, res) => {
         const classrooms = await prisma.classroom.findMany({
             where: {
                 schoolId: schoolId
+            },
+            select: {
+                name: true,
+                yearLevel: true
             }
         });
 
@@ -301,7 +314,7 @@ const assignTeaching = (async (req, res) => {
         const subjectName = req.body.subject;
         const classroomName = req.body.classroom;
 
-        const teacher = await prisma.teacher.findUnique({
+        const teacher = await prisma.teacher.findUniqueOrThrow({
             where: {
                 email: teacherEmail
             },
@@ -310,7 +323,7 @@ const assignTeaching = (async (req, res) => {
             }
         });
 
-        const classroom = await prisma.classroom.findFirst({
+        const classroom = await prisma.classroom.findFirstOrThrow({
             where: {
                 name: classroomName,
                 schoolId: schoolId
@@ -321,7 +334,7 @@ const assignTeaching = (async (req, res) => {
             }
         });
 
-        const subject = await prisma.subject.findFirst({
+        const subject = await prisma.subject.findFirstOrThrow({
             where: {
                 name: subjectName,
                 yearLevel: classroom.yearLevel
@@ -350,15 +363,33 @@ const assignTeaching = (async (req, res) => {
 const getTeachings = (async (req, res) => {
     try {
         const schoolId = req.user.id;
+        const givenYear = req.body.year;
         
         const teachings = await prisma.teaching.findMany({
             where: {
-                schoolId: schoolId
+                schoolId: schoolId,
+                year: givenYear
             },
-            include: {
-                subject: true,
-                teacher: true,
-                classroom: true
+            select: {
+                year: true,
+                subject: {
+                    select: {
+                        name: true,
+                        weeklyHours: true
+                    }
+                },
+                teacher: {
+                    select: {
+                        email: true,
+                        surname: true,
+                        name: true
+                    }
+                },
+                classroom: {
+                    select: {
+                        name: true
+                    }
+                }
             }
         });
 

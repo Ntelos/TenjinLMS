@@ -33,7 +33,7 @@ const getTeacher = async (req, res) => {
     try {
         const teacherId = req.user.id;
 
-        const teacher = await prisma.teacher.findUnique({
+        const teacher = await prisma.teacher.findUniqueOrThrow({
             where: {
                 id: teacherId,
             },
@@ -50,11 +50,14 @@ const getSchools = async (req, res) => {
         const teacherId = req.user.id;
         const year = req.body.year;
 
-        const schools = await prisma.teaching.findMany({
+        const schools = await prisma.employment.findMany({
             where: {
                 year: year,
                 teacherId: teacherId,
             },
+            distinct: [
+                'schoolId'
+            ],
             select: {
                 school: { select: { name: true } },
             },
@@ -92,20 +95,20 @@ const getSubjects = async (req, res) => {
 const getTasksOfSubject = async (req, res) => {
     try {
         const teacherId = req.user.id;
-        const schoolName = req.body.schoolName;
+        const schoolEmail = req.body.schoolEmail;
         const year = req.body.year;
         const subjectName = req.body.subjectName;
         const classroomName = req.body.classroomName;
 
         //Find related School
-        const school = await prisma.school.findUnique({
+        const school = await prisma.school.findUniqueOrThrow({
             where: {
-                name: schoolName,
+                email: schoolEmail,
             },
         });
 
         //Find related Classroom
-        const classroom = await prisma.classroom.findFirst({
+        const classroom = await prisma.classroom.findFirstOrThrow({
             where: {
                 name: classroomName,
                 schoolId: school.id,
@@ -113,14 +116,14 @@ const getTasksOfSubject = async (req, res) => {
         });
 
         //Find related Subject based on Classroom's yearLevel
-        const subject = await prisma.subject.findFirst({
+        const subject = await prisma.subject.findFirstOrThrow({
             where: {
                 name: subjectName,
                 yearLevel: classroom.yearLevel,
             },
         });
 
-        const teaching = await prisma.teaching.findFirst({
+        const teaching = await prisma.teaching.findFirstOrThrow({
             where: {
                 schoolId: school.id,
                 year: year,
@@ -151,20 +154,20 @@ const addTaskToSubject = async (req, res) => {
         const teacherId = req.user.id;
         const comment = req.body.comment;
         const points = req.body.points;
-        const schoolName = req.body.schoolName;
+        const schoolEmail = req.body.schoolEmail;
         const year = req.body.year;
         const subjectName = req.body.subjectName;
         const classroomName = req.body.classroomName;
 
         //Find related School
-        const school = await prisma.school.findUnique({
+        const school = await prisma.school.findUniqueOrThrow({
             where: {
-                name: schoolName,
+                email: schoolEmail,
             },
         });
 
         //Find related Classroom
-        const classroom = await prisma.classroom.findFirst({
+        const classroom = await prisma.classroom.findFirstOrThrow({
             where: {
                 name: classroomName,
                 schoolId: school.id,
@@ -172,7 +175,7 @@ const addTaskToSubject = async (req, res) => {
         });
 
         //Find related Subject based on Classroom's yearLevel
-        const subject = await prisma.subject.findFirst({
+        const subject = await prisma.subject.findFirstOrThrow({
             where: {
                 name: subjectName,
                 yearLevel: classroom.yearLevel,
@@ -180,7 +183,7 @@ const addTaskToSubject = async (req, res) => {
         });
 
         //Find related Teaching
-        const teaching = await prisma.teaching.findFirst({
+        const teaching = await prisma.teaching.findFirstOrThrow({
             where: {
                 year: year,
                 schoolId: school.id,

@@ -28,7 +28,7 @@ const getSchool = (async (req, res) => {
     try {
         const schoolId = req.user.id;
 
-        const school = await prisma.school.findUnique({
+        const school = await prisma.school.findUniqueOrThrow({
             where: {
                 id: schoolId
             }
@@ -197,7 +197,7 @@ const getStudentsOfClassroom = (async (req, res) => {
         const schoolId = req.user.id;
         const classroomName = req.body.name;
         
-        const classroom = await prisma.classroom.findFirst({
+        const classroom = await prisma.classroom.findFirstOrThrow({
             where: {
                 schoolId: schoolId,
                 name: classroomName
@@ -207,6 +207,14 @@ const getStudentsOfClassroom = (async (req, res) => {
         const students = await prisma.student.findMany({
             where: {
                 classroomId: classroom.id
+            },
+            select: {
+                id: true,
+                email: true,
+                name: true,
+                surname: true,
+                phone: true,
+                points: true
             }
         });
 
@@ -219,10 +227,10 @@ const getStudentsOfClassroom = (async (req, res) => {
 const assignStudentToClassroom = (async (req, res) => {
     try {
         const schoolId = req.user.id;
-        const classroomName = req.body.name;
-        const studentEmail = req.body.email;
+        const studentEmail = req.body.studentEmail;
+        const classroomName = req.body.classroom;
         
-        const classroom = await prisma.classroom.findFirst({
+        const classroom = await prisma.classroom.findFirstOrThrow({
             where: {
                 schoolId: schoolId,
                 name: classroomName
@@ -254,7 +262,7 @@ const getGradesOfStudent = (async (req, res) => {
         const studentEmail = req.body.email;
         const year = req.body.year;
 
-        const student = await prisma.student.findUnique({
+        const student = await prisma.student.findUniqueOrThrow({
             where: {
                 email: studentEmail
             }
@@ -268,7 +276,19 @@ const getGradesOfStudent = (async (req, res) => {
             select: {
                 date: true,
                 grade: true,
-                teaching: { select: { subject: true }}
+                teaching: { 
+                    select: { 
+                        subject: true,
+                        teacher: {
+                            select: {
+                                name: true,
+                                surname: true,
+                                email: true,
+                                phone: true
+                            }
+                        }
+                    }
+                }
             }
         })
 
@@ -283,7 +303,7 @@ const getAbsencesOfStudent = (async (req, res) => {
         const studentEmail = req.body.email;
         const year = req.body.year;
 
-        const student = await prisma.student.findUnique({
+        const student = await prisma.student.findUniqueOrThrow({
             where: {
                 email: studentEmail
             }
@@ -296,7 +316,19 @@ const getAbsencesOfStudent = (async (req, res) => {
             },
             select: {
                 date: true,
-                teaching: { select: { subject: true }}
+                teaching: { 
+                    select: { 
+                        subject: true,
+                        teacher: {
+                            select: {
+                                name: true,
+                                surname: true,
+                                email: true,
+                                phone: true
+                            }
+                        }
+                    }
+                }
             }
         })
 

@@ -8,7 +8,7 @@ const { validateLogin } = require('../validators/loginValidator');
 const login = (async (req, res) => {
     const { error } = validateLogin(req.body);
     if (error) {
-        return res.status(400).json({errors: error.details});
+        return res.status(401).json({errors: error.details});
     }
 
     let user = await prisma.student.findUnique({
@@ -37,12 +37,12 @@ const login = (async (req, res) => {
     }
 
     if (!user) {
-        return res.status(400).json({error: 'User not found'});
+        return res.status(401).json({error: 'User not found'});
     }
 
     const validPassword = await bcrypt.compare(req.body.password, user.password);
     if (!validPassword) {
-        return res.status(400).json({error: 'Password is not correct'});
+        return res.status(401).json({error: 'Password is not correct'});
     }
 
     const token = jwt.sign({id: user.id, role: role}, process.env.TOKEN_SECRET);

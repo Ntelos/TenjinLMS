@@ -9,6 +9,26 @@
         <span class="text">Profile</span>
     </router-link>
 
+    <router-link v-if="store.role === 'student'" class="button" :to="{ name: 'grades' }">
+        <span class="material-icons">library_books</span>
+        <span class="text">Grades</span>
+    </router-link>
+
+    <router-link v-if="store.role === 'student'" class="button" :to="{ name: 'absences' }">
+        <span class="material-icons">directions_run</span>
+        <span class="text">Absences</span>
+    </router-link>
+
+    <router-link v-if="store.role === 'student'" class="button" :to="{ name: 'subjects' }">
+        <span class="material-icons">menu_book</span>
+        <span class="text">Subjects</span>
+    </router-link>
+
+    <router-link v-if="store.role === 'student'" class="button" :to="{ name: 'tasks' }">
+        <span class="material-icons">pending_actions</span>
+        <span class="text">Tasks</span>
+    </router-link>
+
     <router-link v-if="!store.authenticated" class="button" :to="{ name: 'login' }">
         <span class="material-icons">login</span>
         <span class="text">Login</span>

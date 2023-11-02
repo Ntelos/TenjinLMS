@@ -1,4 +1,5 @@
 <template>
+    <!-- General -->
     <router-link class="button" :to="{ name: 'home' }">
         <span class="material-icons">home</span>
         <span class="text">Home</span>
@@ -9,6 +10,7 @@
         <span class="text">Profile</span>
     </router-link>
 
+    <!-- Students -->
     <router-link v-if="store.role === 'student'" class="button" :to="{ name: 'grades' }">
         <span class="material-icons">library_books</span>
         <span class="text">Grades</span>
@@ -29,6 +31,29 @@
         <span class="text">Tasks</span>
     </router-link>
 
+    <!-- Schools -->
+    <router-link v-if="store.role === 'school'" class="button" :to="{ name: 'students' }">
+        <span class="material-icons">groups_2</span>
+        <span class="text">Students</span>
+    </router-link>
+
+    <router-link v-if="store.role === 'school'" class="button" :to="{ name: 'teachers' }">
+        <span class="material-icons">manage_accounts</span>
+        <span class="text">Teachers</span>
+    </router-link>
+
+    <router-link v-if="store.role === 'school'" class="button" :to="{ name: 'management' }">
+        <span class="material-icons">list_alt</span>
+        <span class="text">Management</span>
+    </router-link>
+
+    <!-- Teachers -->
+    <router-link v-if="store.role === 'teacher'" class="button" :to="{ name: 'teachermanagement' }">
+        <span class="material-icons">list_alt</span>
+        <span class="text">Management</span>
+    </router-link>
+
+    <!-- General -->
     <router-link v-if="!store.authenticated" class="button" :to="{ name: 'login' }">
         <span class="material-icons">login</span>
         <span class="text">Login</span>

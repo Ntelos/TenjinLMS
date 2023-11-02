@@ -83,6 +83,58 @@ const routes = [
     }
   },
   {
+    path: '/students',
+    name: 'students',
+    component: () => import('@/views/StudentsView.vue'),
+    beforeEnter: (to, from, next) => {
+      if (!useStore().authenticated) {
+        return next({
+          name: 'login'
+        })
+      }
+      next()
+    }
+  },
+  {
+    path: '/teachers',
+    name: 'teachers',
+    component: () => import('@/views/TeachersView.vue'),
+    beforeEnter: (to, from, next) => {
+      if (!useStore().authenticated) {
+        return next({
+          name: 'login'
+        })
+      }
+      next()
+    }
+  },
+  {
+    path: '/management',
+    name: 'management',
+    component: () => import('@/views/ManagementView.vue'),
+    beforeEnter: (to, from, next) => {
+      if (!useStore().authenticated) {
+        return next({
+          name: 'login'
+        })
+      }
+      next()
+    }
+  },
+  {
+    path: '/teachermanagement',
+    name: 'teachermanagement',
+    component: () => import('@/views/TeacherManagementView.vue'),
+    beforeEnter: (to, from, next) => {
+      if (!useStore().authenticated) {
+        return next({
+          name: 'login'
+        })
+      }
+      next()
+    }
+  },
+  {
     path: '/:catchAll(.*)',
     name: 'pageNotFound',
     component: () => import('@/views/PageNotFoundView.vue')

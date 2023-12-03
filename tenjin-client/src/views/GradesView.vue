@@ -3,6 +3,7 @@
     <h1>Grades</h1>
 
     <br>
+    <label>Period: </label>
     <select v-model="year" @change="onChange()">
         <option value="2022-23">2022-23</option>
         <option value="2023-24">2023-24</option>
@@ -66,7 +67,3 @@
 
   }
 </script>
-
-<style lang="scss">
-  @import "@/styles/table.scss";
-</style>

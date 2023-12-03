@@ -1,17 +1,22 @@
 <template>
-  <div class="name">
-        {{ store.user.name }}
+    <div class="name">
+        <br>
+        <h2>
+            {{ store.user.name }}
+        </h2>
     </div>
     <div class="address">
+        <br>
+        Address:
         {{ store.user.address }},
         {{ store.user.town }},
         {{ store.user.district }}
     </div>
     <div class="phone">
-        {{ store.user.phone }}
+        Phone: {{ store.user.phone }}
     </div>
     <div class="email">
-        {{ store.user.email }}
+        Email: {{ store.user.email }}
     </div>
 </template>
 

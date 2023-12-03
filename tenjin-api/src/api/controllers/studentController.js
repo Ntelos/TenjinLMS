@@ -30,15 +30,16 @@ const getStudent = (async (req, res) => {
         const student = await prisma.student.findUnique({
             where: {
                 id: studentId
-            },
-            include: {
-                classroom: true,
-                classroom: {
-                    include: {
-                        school: true
-                    }
-                }
             }
+            //,
+            // include: {
+            //     classroom: true,
+            //     classroom: {
+            //         include: {
+            //             school: true
+            //         }
+            //     }
+            // }
         });
 
         return res.status(200).json({success: student});
@@ -70,14 +71,31 @@ const getClassroom = (async (req, res) => {
     try {
         const studentId = req.user.id;
 
-        const classroom = await prisma.student.findUnique({
+        const currentDate = new Date()
+        const currentMonth = currentDate.getMonth()
+        const currentYear = currentDate.getFullYear()
+        const previousYear = currentYear - 1
+        const nextYear = currentYear + 1
+        
+        const yearNext = currentYear.toString().concat("-", nextYear.toString().substring(2))
+        const yearPrev = previousYear.toString().concat("-", currentYear.toString().substring(2))
+        
+        let year = yearNext
+
+        if (currentMonth < 8) {
+            year = yearPrev
+        }
+
+        const classroom = await prisma.classroom.findFirst({
             where: {
-                id: studentId
-            },
-            select: {
-                classroom: true
+                year: year,
+                Student: {
+                    every: {
+                        id: studentId
+                    }
+                }
             }
-        });
+        })
 
         return res.status(200).json({success: classroom});
     } catch (e) {
@@ -148,26 +166,46 @@ const getSubjects = (async (req, res) => {
         const studentId = req.user.id;
         const year = req.body.year;
         
-        const classroom = await prisma.student.findUnique({
-            where: {
-                id: studentId
-            },
-            select: {
-                classroom: true
-            }
-        });
+        // const classroom = await prisma.student.findUnique({
+        //     where: {
+        //         id: studentId
+        //     },
+        //     select: {
+        //         classroom: true
+        //     }
+        // })
 
-        const subjects = await prisma.teaching.findMany({
-            where: {
-                classroomId: classroom.id,
-                year: year
-            },
-            select: {
-                subject: true
-            }
-        });
+        // const subjects = await prisma.teaching.findMany({
+        //     where: {
+        //         classroomId: classroom.id,
+        //         year: year
+        //     },
+        //     select: {
+        //         subject: true
+        //     }
+        // })
 
-        return res.status(200).json({success: subjects});
+        const classroom = await prisma.classroom.findFirst({
+            where: {
+                year: year,
+                Student: {
+                    every: {
+                        id: studentId
+                    }
+                }
+            },
+            include: {
+                Teaching: true,
+                Teaching: {
+                    include: {
+                        subject: true,
+                        teacher: true
+                    }
+                }
+            }
+        })
+
+        return res.status(200).json({success: classroom});
     } catch (e) {
         return res.status(500).json({error: e});
     }

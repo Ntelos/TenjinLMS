@@ -181,6 +181,7 @@ const addClassroom = (async (req, res) => {
         const classroom = await prisma.classroom.create({
             data: {
                 name: req.body.name,
+                year: req.body.year,
                 yearLevel: req.body.yearLevel,
                 schoolId: schoolId
             }

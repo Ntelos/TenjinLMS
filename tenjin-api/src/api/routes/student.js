@@ -7,9 +7,9 @@ router.get('/', authenticate, verifyRoleSet(["student"]), getStudent);
 router.get('/points', authenticate, verifyRoleSet(["student"]), getPoints);
 router.get('/classroom', authenticate, verifyRoleSet(["student"]), getClassroom);
 router.post('/grades', authenticate, verifyRoleSet(["student"]), getGrades);
-router.get('/absences', authenticate, verifyRoleSet(["student"]), getAbsences);
-router.get('/subjects', authenticate, verifyRoleSet(["student"]), getSubjects);
-router.get('/subject/tasks', authenticate, verifyRoleSet(["student"]), getTasks);
+router.post('/absences', authenticate, verifyRoleSet(["student"]), getAbsences);
+router.post('/subjects', authenticate, verifyRoleSet(["student"]), getSubjects);
+router.post('/subject/tasks', authenticate, verifyRoleSet(["student"]), getTasks);
 
 
 module.exports = router;

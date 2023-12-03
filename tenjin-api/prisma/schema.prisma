@@ -15,8 +15,9 @@ model Student {
   surname     String
   phone       String?      @unique
   points      Int?
-  classroom   Classroom?   @relation(fields: [classroomId], references: [id])
-  classroomId String?
+  // classroom   Classroom?   @relation(fields: [classroomId], references: [id])
+  // classroomId String?
+  Classroom   Classroom[]
   Enrollment  Enrollment[]
   Grade       Grade[]
   Absence     Absence[]
@@ -59,6 +60,7 @@ model Subject {
 model Classroom {
   id        String     @id @unique @default(cuid())
   name      String
+  year      String
   yearLevel String
   school    School     @relation(fields: [schoolId], references: [id])
   schoolId  String

@@ -1,13 +1,17 @@
 <template>
-  <div class="name">
-        {{ store.user.name }}
-        {{ store.user.surname }}
+    <div class="name">
+        <br>
+        <h2>
+            {{ store.user.name }}
+            {{ store.user.surname }}
+        </h2>
     </div>
     <div class="email">
-        {{ store.user.email }}
+        <br>
+        Email: {{ store.user.email }}
     </div>
     <div class="phone">
-        {{ store.user.phone }}
+        Phone: {{ store.user.phone }}
     </div>
     <div class="points">
         <div v-if="store.user.points !== null">

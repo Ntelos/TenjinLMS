@@ -84,7 +84,7 @@ export const useStore = defineStore('user', {
         }
         const response = await axios.get('/student/classroom', config)
         this.user.classroom = response.data.success.classroom.name
-        console.log(this.user.classroom)
+        // console.log(this.user.classroom)
       } catch (error) {
         console.log(error)
       }

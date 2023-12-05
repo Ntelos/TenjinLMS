@@ -1,6 +1,5 @@
 <template>
-    <main id="StudentsView">
-      Students
-    </main>
-  </template>
-  
+  <main id="StudentsView">
+    <h1>Students</h1>
+  </main>
+</template>

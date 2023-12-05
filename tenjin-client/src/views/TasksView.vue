@@ -3,30 +3,29 @@
     <h1>Tasks</h1>
 
     <br>
-    <label>Period: </label>
-    <select v-model="year" @change="onChange()">
-        <option value="2022-23">2022-23</option>
-        <option value="2023-24">2023-24</option>
-    </select>
+    <label>Period: {{ year }}</label>
     <br><br>
 
-    <label>Total Absences: {{ datax.count }}</label>
+    <label>Subject: </label>
+    <select v-model="subject" @change="onChange()">
+      <option v-for="s in subjects.Teaching" :value="s">{{s.subject.name}}</option>
+    </select>
     <br><br>
 
     <table class="table table-bordered">
       <thead>
         <tr>
-          <th>Date/Time</th>
-          <th>Year Level</th>
-          <th>Subject</th>
-          <th>Teacher</th>
+          <th>Title</th>
+          <th>Points</th>
+          <th>Active</th>
+          <th>Date</th>
         </tr>
       </thead>
-      <tr v-for="d in datax.absences">
+      <tr v-for="d in datax">
+        <td>{{ d.comment }}</td>
+        <td>{{ d.points }}</td>
+        <td>{{ d.active }}</td>
         <td>{{ d.date }}</td>
-        <td>{{ d.teaching.subject.yearLevel }}</td>
-        <td>{{ d.teaching.subject.name }}</td>
-        <td>{{ d.teaching.teacher.surname }} {{ d.teaching.teacher.name }}</td>
       </tr>
     </table>
 
@@ -42,7 +41,9 @@
     data() {
       return {
         year: '2023-24',
-        datax: { count: null, absences: null }
+        subject: null,
+        subjects: { Teaching: null },
+        datax: null
       }
     },
 
@@ -50,19 +51,20 @@
       const store = useStore()
       const body = { 'year': this.year }
       const config = { headers: { 'auth-token': store.token } }
-
-      axios.post('/student/absences', body, config)
-        .then(response => this.datax = response.data.success)
+      
+      axios.post('/student/subjects', body, config)
+        .then(response => this.subjects = response.data.success)
         .catch(error => console.error(error))
     },
 
     methods: {
       onChange() {
         const store = useStore()
-        const body = { 'year': this.year }
+        const body = { 'year': this.year,
+                       'subject': this.subject.subject.name }
         const config = { headers: { 'auth-token': store.token } }
 
-        axios.post('/student/absences', body, config)
+        axios.post('/student/subject/tasks', body, config)
           .then(response => this.datax = response.data.success)
           .catch(error => console.error(error))
       }

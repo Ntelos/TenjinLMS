@@ -163,27 +163,8 @@ const getAbsences = (async (req, res) => {
 
 const getSubjects = (async (req, res) => {
     try {
-        const studentId = req.user.id;
-        const year = req.body.year;
-        
-        // const classroom = await prisma.student.findUnique({
-        //     where: {
-        //         id: studentId
-        //     },
-        //     select: {
-        //         classroom: true
-        //     }
-        // })
-
-        // const subjects = await prisma.teaching.findMany({
-        //     where: {
-        //         classroomId: classroom.id,
-        //         year: year
-        //     },
-        //     select: {
-        //         subject: true
-        //     }
-        // })
+        const studentId = req.user.id
+        const year = req.body.year
 
         const classroom = await prisma.classroom.findFirst({
             where: {
@@ -213,33 +194,29 @@ const getSubjects = (async (req, res) => {
 
 const getTasks = (async (req, res) => {
     try {
-        const studentId = req.user.id;
-        const subjectName = req.body.subject;
-        const year = req.body.year;
+        const studentId = req.user.id
+        const subjectName = req.body.subject
+        const year = req.body.year
 
-        const classroom = await prisma.student.findUnique({
+        const tasks = await prisma.task.findMany({
             where: {
-                id: studentId
-            },
-            select: {
-                classroom: true
-            }
-        });
-
-        const tasks = await prisma.teaching.findMany({
-            where: {
-                classroomId: classroom.id,
-                year: year,
-                subject: {
-                    name: subjectName
+                teaching: {
+                    year: year,
+                    subject: {
+                        name: subjectName
+                    },
+                    classroom: {
+                        Student: {
+                            every: {
+                                id: studentId
+                            }
+                        }
+                    }
                 }
-            },
-            select: {
-                Task: true
             }
-        });
+        })
+        return res.status(200).json({success: tasks})
 
-        return res.status(200).json({success: tasks});
     } catch (e) {
         return res.status(500).json({error: e});
     }

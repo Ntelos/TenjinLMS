@@ -9,7 +9,7 @@ const  { addSchool, getSchool, getStudents,
 router.post('/', addSchool);
 router.get('/', authenticate, verifyRoleSet(["school"]), getSchool);
 
-router.get('/students', authenticate, verifyRoleSet(["school"]), getStudents);
+router.post('/students', authenticate, verifyRoleSet(["school"]), getStudents);
 router.post('/student', authenticate, verifyRoleSet(["school"]), enrollStudent);
 
 router.get('/teachers', authenticate, verifyRoleSet(["school"]), getTeachers);

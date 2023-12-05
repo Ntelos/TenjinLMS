@@ -38,3 +38,12 @@ button {
     }
   }
 }
+
+.but {
+  background: var(--dark);
+  border: 0;
+  padding: 10px 20px;
+  color: var(--light);
+  border-radius: 20px;
+  cursor: pointer;
+}

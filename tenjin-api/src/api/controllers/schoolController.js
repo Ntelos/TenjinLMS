@@ -94,7 +94,7 @@ const enrollStudent = (async (req, res) => {
 
         return res.status(200).json({success: {enrollmentId: enrollment.id} });
     } catch (e) {
-        return res.status(500).json({error: e});
+        return res.status(404).json({error: e});
     }
 })
 

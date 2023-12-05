@@ -12,4 +12,6 @@
 <style lang="scss">
   @import "@/styles/app.scss";
   @import "@/styles/table.scss";
+  @import "@/styles/modal.scss";
+  @import "@/styles/form.scss";
 </style>

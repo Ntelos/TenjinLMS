@@ -156,15 +156,23 @@ const employTeacher = (async (req, res) => {
 
 const getClassrooms = (async (req, res) => {
     try {
-        const schoolId = req.user.id;
+        const schoolId = req.user.id
+        const givenYear = req.body.year
         
         const classrooms = await prisma.classroom.findMany({
             where: {
-                schoolId: schoolId
+                schoolId: schoolId,
+                year: givenYear
             },
             select: {
                 name: true,
-                yearLevel: true
+                yearLevel: true,
+                _count: {
+                  select: { 
+                    Student: true,
+                    Teaching: true
+                 }
+                },
             }
         });
 
@@ -195,46 +203,52 @@ const addClassroom = (async (req, res) => {
 
 const getStudentsOfClassroom = (async (req, res) => {
     try {
-        const schoolId = req.user.id;
-        const classroomName = req.body.name;
-        
+        const schoolId = req.user.id
+        const classroomName = req.body.name
+        const givenYear = req.body.year
+
         const classroom = await prisma.classroom.findFirstOrThrow({
             where: {
                 schoolId: schoolId,
-                name: classroomName
-            }
-        });
-
-        const students = await prisma.student.findMany({
-            where: {
-                classroomId: classroom.id
+                name: classroomName,
+                year: givenYear
             },
             select: {
                 id: true,
-                email: true,
                 name: true,
-                surname: true,
-                phone: true,
-                points: true
+                year: true,
+                yearLevel: true,
+                Student: {
+                    select: {
+                        id: true,
+                        email: true,
+                        name: true,
+                        surname: true,
+                        phone: true,
+                        phone: true
+                    }
+                }
             }
-        });
+        })
 
-        return res.status(200).json({success: {classroom: classroom.name, students: students} });
+        return res.status(200).json({success: classroom})
     } catch (e) {
-        return res.status(500).json({error: e});
+        return res.status(500).json({error: e})
     }
 })
 
 const assignStudentToClassroom = (async (req, res) => {
     try {
-        const schoolId = req.user.id;
-        const studentEmail = req.body.studentEmail;
-        const classroomName = req.body.classroom;
+        const schoolId = req.user.id
+        const studentEmail = req.body.studentEmail
+        const classroomName = req.body.classroom
+        const givenYear = req.body.year
         
         const classroom = await prisma.classroom.findFirstOrThrow({
             where: {
                 schoolId: schoolId,
-                name: classroomName
+                name: classroomName,
+                year: givenYear
             }
         });
 
@@ -243,12 +257,15 @@ const assignStudentToClassroom = (async (req, res) => {
                 email: studentEmail
             },
             data: {
-                classroomId: classroom.id
+                Classroom: {
+                    connect: {
+                        id: classroom.id,
+                    }
+                }
             },
             select: {
                 name: true,
-                surname: true,
-                classroom: true
+                surname: true
             }
         });
 
@@ -359,11 +376,13 @@ const assignTeaching = (async (req, res) => {
         const classroom = await prisma.classroom.findFirstOrThrow({
             where: {
                 name: classroomName,
-                schoolId: schoolId
+                schoolId: schoolId,
+                year: year
             },
             select: {
                 id: true,
-                yearLevel: true
+                yearLevel: true,
+                year: true
             }
         });
 
@@ -395,13 +414,17 @@ const assignTeaching = (async (req, res) => {
 
 const getTeachings = (async (req, res) => {
     try {
-        const schoolId = req.user.id;
-        const givenYear = req.body.year;
+        const schoolId = req.user.id
+        const givenYear = req.body.year
+        const teacherEmail = req.body.teacherEmail
         
         const teachings = await prisma.teaching.findMany({
             where: {
                 schoolId: schoolId,
-                year: givenYear
+                year: givenYear,
+                teacher: {
+                    email: teacherEmail
+                }
             },
             select: {
                 year: true,
@@ -432,11 +455,49 @@ const getTeachings = (async (req, res) => {
     }
 })
 
+const getUnassignedStudentsOfSchool = (async (req, res) => {
+    try {
+        const schoolId = req.user.id;
+        const givenYear = req.body.year;
+        const givenYearLevel = req.body.yearLevel;
+        
+        const unassignedStudents = await prisma.school.findUnique({
+            where: {
+                id: schoolId,
+            },
+            select: {
+                Enrollment: {
+                    where: {
+                        year: givenYear,
+                        yearLevel: givenYearLevel,
+                        student: {
+                            Classroom: {
+                                none: {
+                                    year: givenYear
+                                }
+                            }
+                        }
+                    },
+                    select: {
+                        student: true,
+                        year: true,
+                        yearLevel: true
+                    }
+                }
+            }
+        })
+
+        return res.status(200).json({success: unassignedStudents });
+    } catch (e) {
+        return res.status(500).json({error: e});
+    }
+})
+
 
 module.exports = {
     addSchool, getSchool, getStudents, 
     enrollStudent, getTeachers, employTeacher, 
     getClassrooms, addClassroom, getStudentsOfClassroom, 
     assignStudentToClassroom, getGradesOfStudent, 
-    getAbsencesOfStudent, assignTeaching, getTeachings
+    getAbsencesOfStudent, assignTeaching, getTeachings, getUnassignedStudentsOfSchool
 }

@@ -112,6 +112,13 @@ table {
     border-radius: $table-bordered-border-radius;
 }
 
+.table-hover {
+    tr:hover {
+        background-color: var(--primary);
+        cursor: pointer;
+    }
+}
+
 .table-bordered th + th,
 %table-bordered th + th,
 .table-bordered td + td,

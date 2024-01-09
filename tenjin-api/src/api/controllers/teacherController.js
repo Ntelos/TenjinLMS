@@ -74,19 +74,19 @@ const getSubjects = async (req, res) => {
         const teacherId = req.user.id;
         const year = req.body.year;
 
-        const subjects = await prisma.teaching.findMany({
+        const teachings = await prisma.teaching.findMany({
             where: {
                 year: year,
                 teacherId: teacherId,
             },
             select: {
-                school: { select: { name: true } },
+                school: { select: { name: true, email: true } },
                 classroom: { select: { name: true } },
                 subject: true,
             },
         });
 
-        return res.status(200).json({ success: { subjects: subjects } });
+        return res.status(200).json({ success: { teachings } });
     } catch (e) {
         return res.status(500).json({ error: e });
     }
@@ -94,26 +94,27 @@ const getSubjects = async (req, res) => {
 
 const getTasksOfSubject = async (req, res) => {
     try {
-        const teacherId = req.user.id;
-        const schoolEmail = req.body.schoolEmail;
-        const year = req.body.year;
-        const subjectName = req.body.subjectName;
-        const classroomName = req.body.classroomName;
+        const teacherId = req.user.id
+        const schoolEmail = req.body.schoolEmail
+        const year = req.body.year
+        const subjectName = req.body.subjectName
+        const classroomName = req.body.classroomName
 
         //Find related School
         const school = await prisma.school.findUniqueOrThrow({
             where: {
                 email: schoolEmail,
             },
-        });
-
+        })
+        
         //Find related Classroom
         const classroom = await prisma.classroom.findFirstOrThrow({
             where: {
                 name: classroomName,
                 schoolId: school.id,
+                year: year
             },
-        });
+        })
 
         //Find related Subject based on Classroom's yearLevel
         const subject = await prisma.subject.findFirstOrThrow({
@@ -121,7 +122,7 @@ const getTasksOfSubject = async (req, res) => {
                 name: subjectName,
                 yearLevel: classroom.yearLevel,
             },
-        });
+        })
 
         const teaching = await prisma.teaching.findFirstOrThrow({
             where: {
@@ -141,7 +142,7 @@ const getTasksOfSubject = async (req, res) => {
                     }
                 }
             }
-        });
+        })
 
         return res.status(200).json({ success: teaching });
     } catch (e) {

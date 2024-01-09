@@ -42,15 +42,15 @@
         <span class="text">Teachers</span>
     </router-link>
 
-    <router-link v-if="store.role === 'school'" class="button" :to="{ name: 'management' }">
+    <router-link v-if="store.role === 'school'" class="button" :to="{ name: 'classes' }">
         <span class="material-icons">list_alt</span>
-        <span class="text">Management</span>
+        <span class="text">Classes</span>
     </router-link>
 
     <!-- Teachers -->
-    <router-link v-if="store.role === 'teacher'" class="button" :to="{ name: 'teachermanagement' }">
+    <router-link v-if="store.role === 'teacher'" class="button" :to="{ name: 'teachings' }">
         <span class="material-icons">list_alt</span>
-        <span class="text">Management</span>
+        <span class="text">Teachings</span>
     </router-link>
 
     <!-- General -->

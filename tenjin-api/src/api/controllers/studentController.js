@@ -90,7 +90,7 @@ const getClassroom = (async (req, res) => {
             where: {
                 year: year,
                 Student: {
-                    every: {
+                    some: {
                         id: studentId
                     }
                 }
@@ -170,7 +170,7 @@ const getSubjects = (async (req, res) => {
             where: {
                 year: year,
                 Student: {
-                    every: {
+                    some: {
                         id: studentId
                     }
                 }
@@ -184,6 +184,7 @@ const getSubjects = (async (req, res) => {
                     }
                 }
             }
+
         })
 
         return res.status(200).json({success: classroom});
@@ -207,7 +208,7 @@ const getTasks = (async (req, res) => {
                     },
                     classroom: {
                         Student: {
-                            every: {
+                            some: {
                                 id: studentId
                             }
                         }

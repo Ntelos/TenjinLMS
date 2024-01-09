@@ -7,10 +7,10 @@ const  { addTeacher, getTeacher, getSchools, getSubjects, getTasksOfSubject, add
 router.post('/', addTeacher);
 router.get('/', authenticate, verifyRoleSet(["teacher"]), getTeacher);
 
-router.get('/schools', authenticate, verifyRoleSet(["teacher"]), getSchools);
-router.get('/subjects', authenticate, verifyRoleSet(["teacher"]), getSubjects);
+router.post('/schools', authenticate, verifyRoleSet(["teacher"]), getSchools);
+router.post('/subjects', authenticate, verifyRoleSet(["teacher"]), getSubjects);
 
-router.get('/subject/tasks', authenticate, verifyRoleSet(["teacher"]), getTasksOfSubject);
+router.post('/subject/tasks', authenticate, verifyRoleSet(["teacher"]), getTasksOfSubject);
 router.post('/subject/task', authenticate, verifyRoleSet(["teacher"]), addTaskToSubject);
 
 router.get('/classroom/students', authenticate, verifyRoleSet(["teacher"]), getStudentsOfClassroom);

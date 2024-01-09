@@ -2,6 +2,7 @@ import { createRouter, createWebHistory } from 'vue-router'
 import { useStore } from '@/stores/store'
 
 const routes = [
+  //Generic
   {
     path: '/',
     name: 'home',
@@ -30,10 +31,11 @@ const routes = [
       next()
     }
   },
+  //Student
   {
     path: '/grades',
     name: 'grades',
-    component: () => import('@/views/GradesView.vue'),
+    component: () => import('@/views/student/GradesView.vue'),
     beforeEnter: (to, from, next) => {
       if (!useStore().authenticated) {
         return next({
@@ -46,7 +48,7 @@ const routes = [
   {
     path: '/absences',
     name: 'absences',
-    component: () => import('@/views/AbsencesView.vue'),
+    component: () => import('@/views/student/AbsencesView.vue'),
     beforeEnter: (to, from, next) => {
       if (!useStore().authenticated) {
         return next({
@@ -59,7 +61,7 @@ const routes = [
   {
     path: '/subjects',
     name: 'subjects',
-    component: () => import('@/views/SubjectsView.vue'),
+    component: () => import('@/views/student/SubjectsView.vue'),
     beforeEnter: (to, from, next) => {
       if (!useStore().authenticated) {
         return next({
@@ -72,7 +74,7 @@ const routes = [
   {
     path: '/tasks',
     name: 'tasks',
-    component: () => import('@/views/TasksView.vue'),
+    component: () => import('@/views/student/TasksView.vue'),
     beforeEnter: (to, from, next) => {
       if (!useStore().authenticated) {
         return next({
@@ -82,10 +84,11 @@ const routes = [
       next()
     }
   },
+  //School
   {
     path: '/students',
     name: 'students',
-    component: () => import('@/views/StudentsView.vue'),
+    component: () => import('@/views/school/StudentsView.vue'),
     beforeEnter: (to, from, next) => {
       if (!useStore().authenticated) {
         return next({
@@ -98,7 +101,7 @@ const routes = [
   {
     path: '/teachers',
     name: 'teachers',
-    component: () => import('@/views/TeachersView.vue'),
+    component: () => import('@/views/school/TeachersView.vue'),
     beforeEnter: (to, from, next) => {
       if (!useStore().authenticated) {
         return next({
@@ -109,9 +112,9 @@ const routes = [
     }
   },
   {
-    path: '/management',
-    name: 'management',
-    component: () => import('@/views/ManagementView.vue'),
+    path: '/classes',
+    name: 'classes',
+    component: () => import('@/views/school/ClassesView.vue'),
     beforeEnter: (to, from, next) => {
       if (!useStore().authenticated) {
         return next({
@@ -121,10 +124,11 @@ const routes = [
       next()
     }
   },
+  //Teacher
   {
-    path: '/teachermanagement',
-    name: 'teachermanagement',
-    component: () => import('@/views/TeacherManagementView.vue'),
+    path: '/teachings',
+    name: 'teachings',
+    component: () => import('@/views/teacher/TeachingsView.vue'),
     beforeEnter: (to, from, next) => {
       if (!useStore().authenticated) {
         return next({

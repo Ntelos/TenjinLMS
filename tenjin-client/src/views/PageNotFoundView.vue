@@ -6,5 +6,6 @@
         <div class="subtitle">
             <h2>Page not found</h2>
         </div>
+        <img src="@/assets/404image.png" alt="Tenjin 404: Page not found Image">
     </main>
 </template>

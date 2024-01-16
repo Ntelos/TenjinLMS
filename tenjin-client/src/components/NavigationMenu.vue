@@ -53,6 +53,16 @@
         <span class="text">Teachings</span>
     </router-link>
 
+    <router-link v-if="store.role === 'teacher'" class="button" :to="{ name: 'classrooms' }">
+        <span class="material-icons">people_alt</span>
+        <span class="text">Classes</span>
+    </router-link>
+
+    <router-link v-if="store.role === 'teacher'" class="button" :to="{ name: 'teachergrades' }">
+        <span class="material-icons">file_copy</span>
+        <span class="text">Grades</span>
+    </router-link>
+
     <!-- General -->
     <router-link v-if="!store.authenticated" class="button" :to="{ name: 'login' }">
         <span class="material-icons">login</span>

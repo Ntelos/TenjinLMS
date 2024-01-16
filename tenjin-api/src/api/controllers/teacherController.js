@@ -211,29 +211,83 @@ const addTaskToSubject = async (req, res) => {
 
 const getStudentsOfClassroom = async (req, res) => {
     try {
-        const schoolName = req.body.schoolName;
-        const classroomName = req.body.classroomName;
+        const schoolEmail = req.body.schoolEmail
+        const classroomName = req.body.classroomName
+        const year = req.body.year
 
         const school = await prisma.school.findUnique({
             where: {
-                name: schoolName
+                email: schoolEmail
             }
-        });
+        })
 
-        const classroom = await prisma.classroom.findFirst({
+        const students = await prisma.classroom.findFirstOrThrow({
             where: {
                 schoolId: school.id,
-                name: classroomName
+                name: classroomName,
+                year: year
+            },
+            select: {
+                Student: {
+                    select: {
+                        email: true,
+                        name: true,
+                        surname: true,
+                        phone: true,
+                        points: true
+                    }
+                }
             }
-        });
+        })
 
-        const students = await prisma.student.findMany({
+        return res.status(200).json({ success: { students } })
+    } catch (e) {
+        return res.status(500).json({ error: e })
+    }
+};
+
+const getTeachingsOfClassroom = async (req, res) => {
+    try {
+        const teacherId = req.user.id;
+        const year = req.body.year;
+        const schoolEmail = req.body.schoolEmail;
+        const classroomName = req.body.classroomName;
+
+        const subjects = await prisma.Teaching.findMany({
             where: {
-                classroomId: classroom.id
+                year: year,
+                teacherId: teacherId,
+                school: { email: schoolEmail },
+                classroom: { name: classroomName }
+            },
+            select: {
+                subject: true
             }
-        });
+        })
 
-        return res.status(200).json({ success: { students } });
+        return res.status(200).json({ success: { subjects } })
+    } catch (e) {
+        return res.status(500).json({ error: e })
+    }
+};
+
+const getClassrooms = async (req, res) => {
+    try {
+        const teacherId = req.user.id;
+        const year = req.body.year;
+
+        const teachingClassrooms = await prisma.teaching.findMany({
+            where: {
+                year: year,
+                teacherId: teacherId,
+            },
+            select: {
+                school: { select: { name: true, email: true } },
+                classroom: { select: { name: true } }
+            }
+        })
+
+        return res.status(200).json({ success: { teachingClassrooms } });
     } catch (e) {
         return res.status(500).json({ error: e });
     }
@@ -241,8 +295,19 @@ const getStudentsOfClassroom = async (req, res) => {
 
 const addPointsToStudent = async (req, res) => {
     try {
-        const studentEmail = req.body.email;
-        const pointsToAdd = req.body.points;
+        const studentEmail = req.body.email
+        const pointsToAdd = req.body.points
+
+        //Turn null points to 0 in order increment to work
+        const nullpoints = await prisma.student.updateMany({
+            where: {
+                email: studentEmail,
+                points: null
+            },
+            data: {
+                points: 0
+            }
+        })
 
         const points = await prisma.student.update({
             where: {
@@ -257,11 +322,11 @@ const addPointsToStudent = async (req, res) => {
                 email: true,
                 points: true
             }
-        });
+        })
 
-        return res.status(200).json({ success: { points } });
+        return res.status(200).json({ success: { points } })
     } catch (e) {
-        return res.status(500).json({ error: e });
+        return res.status(500).json({ error: e })
     }
 };
 
@@ -400,40 +465,41 @@ const getGradesOfStudents = async (req, res) => {
 
 const addAbsenceToStudent = async (req, res) => {
     try {
-        const teacherId = req.user.id;
-        const year = req.body.year;
-        const schoolName = req.body.school;
-        const studentEmail = req.body.email;
-        const classroomName = req.body.classroom;
-        const subjectName = req.body.subject;
+        const teacherId = req.user.id
+        const year = req.body.year
+        const schoolEmail = req.body.schoolEmail
+        const studentEmail = req.body.studentEmail
+        const classroomName = req.body.classroom
+        const subjectName = req.body.subject
         
         const student = await prisma.student.findUnique({
             where: {
                 email: studentEmail
             }
-        });
+        })
 
         const school = await prisma.school.findUnique({
             where: {
-                name: schoolName,
+                email: schoolEmail,
             },
-        });
+        })
 
-        const classroom = await prisma.classroom.findFirst({
+        const classroom = await prisma.classroom.findFirstOrThrow({
             where: {
                 name: classroomName,
                 schoolId: school.id,
+                year: year
             },
-        });
+        })
 
-        const subject = await prisma.subject.findFirst({
+        const subject = await prisma.subject.findFirstOrThrow({
             where: {
                 name: subjectName,
                 yearLevel: classroom.yearLevel,
             },
-        });
+        })
 
-        const teaching = await prisma.teaching.findFirst({
+        const teaching = await prisma.teaching.findFirstOrThrow({
             where: {
                 year: year,
                 schoolId: school.id,
@@ -441,14 +507,14 @@ const addAbsenceToStudent = async (req, res) => {
                 teacherId: teacherId,
                 classroomId: classroom.id,
             },
-        });
+        })
 
         const absence = await prisma.absence.create({
             data: {
                 studentId: student.id,
                 teachingId: teaching.id
             }
-        });
+        })
 
         return res.status(200).json({ success: { absence } });
     } catch (e) {
@@ -504,9 +570,11 @@ module.exports = {
     getTeacher,
     getSchools,
     getSubjects,
+    getClassrooms,
     getTasksOfSubject,
     addTaskToSubject,
     getStudentsOfClassroom,
+    getTeachingsOfClassroom,
     addPointsToStudent,
     addGradeToStudent,
     getGradesOfStudents,

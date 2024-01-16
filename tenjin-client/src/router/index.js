@@ -139,6 +139,32 @@ const routes = [
     }
   },
   {
+    path: '/classrooms',
+    name: 'classrooms',
+    component: () => import('@/views/teacher/ClassroomsView.vue'),
+    beforeEnter: (to, from, next) => {
+      if (!useStore().authenticated) {
+        return next({
+          name: 'login'
+        })
+      }
+      next()
+    }
+  },
+  {
+    path: '/teachergrades',
+    name: 'teachergrades',
+    component: () => import('@/views/teacher/TeacherGradesView.vue'),
+    beforeEnter: (to, from, next) => {
+      if (!useStore().authenticated) {
+        return next({
+          name: 'login'
+        })
+      }
+      next()
+    }
+  },
+  {
     path: '/:catchAll(.*)',
     name: 'pageNotFound',
     component: () => import('@/views/PageNotFoundView.vue')

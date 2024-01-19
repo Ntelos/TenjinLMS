@@ -1,12 +1,10 @@
 <template>
   <main id="ClassroomsView">
-    <h1>Classes</h1>
+    <h1>Teachings</h1>
     <br>
 
-    <!-- TODO: Display to upper side all the Teacher's teachings, when one is selected display below the corresponding Students with the respected Grade, add button for Grade -->
-
     <label>Period: </label>
-    <select v-model="selectedYear" @change="getClasses()">
+    <select v-model="selectedYear" @change="getTeachings()">
       <option value="2022-23">2022-23</option>
       <option value="2023-24">2023-24</option>
       <option value="2024-25">2024-25</option>
@@ -18,66 +16,72 @@
         <tr>
           <th>School</th>
           <th>Classroom</th>
+          <th>Subject</th>
         </tr>
       </thead>
-      <tr v-for="classroom in classes" v-on:click="selectedClass(classroom)">
-        <td>{{ classroom.school.name }}</td>
-        <td>{{ classroom.classroom.name }}</td>
+      <tr v-for="teaching in teachings" v-on:click="selectedTeaching(teaching)">
+        <td>{{ teaching.school.name }}</td>
+        <td>{{ teaching.classroom.name }}</td>
+        <td>{{ teaching.subject.name }}</td>
       </tr>
     </table>
 
-    <h2>Students of Classroom {{ this.clickedClass.classroom.name }}</h2>
+    <h2>Grades of Teaching {{ this.clickedTeaching.subject.name }} {{ this.clickedTeaching.classroom.name }} {{ this.clickedTeaching.school.name }}</h2>
     <br>
-    <div v-if="clickedClass.classroom.name === null">
-      <p>Select a Classroom</p>
+    <div v-if="clickedTeaching.subject.name === null">
+      <p>Select a Teaching</p>
       <br>
     </div>
     <div v-else>
-      <label>Add Points: </label>
-      <input v-model="addpoints.points" placeholder="points" type="number" />
-      <label> to Student: </label>
-      <select v-model="addpoints.student">
-        <option v-for="student in students" :value="student.email">{{ student.surname }} {{ student.name }}</option>
-      </select>
-      <button class="but" @click="addPoints()">Add Points</button>
-      <br><br>
-
-      <label>Add Absence to Student: </label>
-      <select v-model="addabsence.student">
-        <option v-for="student in students" :value="student.email">{{ student.surname }} {{ student.name }}</option>
-      </select>
-      <label> for Teaching: </label>
-      <select v-model="addabsence.subject">
-        <option v-for="subject in subjects" :value="subject.subject.name">{{ subject.subject.name }}</option>
-      </select>
-      <button class="but" @click="addAbsence()">Add Absence</button>
+      <button class="but" id="show-modal" @click="showModal = true">Submit/Update Grade</button>
       <br><br>
 
       <table class="table table-bordered">
         <thead>
           <tr>
-            <th>Surname</th>
-            <th>Name</th>
+            <th>Student</th>
             <th>Email</th>
-            <th>Phone</th>
-            <th>Points</th>
+            <th>Grade</th>
+            <th>Date</th>
           </tr>
         </thead>
         <tr v-for="student in students">
-          <td>{{ student.surname }}</td>
-          <td>{{ student.name }}</td>
+          <td>{{ student.surname }} {{ student.name }}</td>
           <td>{{ student.email }}</td>
-          <td>{{ student.phone }}</td>
-          <td>{{ student.points }}</td>
+          <td>{{ getGrade(student.email) }}</td>
+          <td>{{ getDate(student.email) }}</td>
         </tr>
       </table>
       <br>
     </div>
 
+    <Teleport to="body">
+      <modal :show="showModal" @close="showModal = false">
+        <template #body>
+          <form @submit.prevent="addGrade">
+            <div class="title">Submit/Update Grade</div>
+
+            <label>Student:</label>
+            <select v-model="form.student" required>
+              <option v-for="student in students" :value="student.email">{{ student.surname }} {{ student.name }}</option>
+            </select>
+
+            <label>Grade:</label>
+            <input type="number" maxlength="2" min="0" max="20" step="0.5" required v-model="form.grade">
+
+            <div class="submit" @click="showModal = false">
+              <button type="submit">Submit</button>
+            </div>
+          </form>
+        </template>
+      </modal>
+    </Teleport>
+
   </main>  
 </template>
 
 <script setup>
+  import Modal from '@/views/Modal.vue'
   import { ref } from 'vue'
   const showModal = ref(false)
 </script>
@@ -92,109 +96,101 @@
     data() {
       return {
         selectedYear: '2023-24',
-        classes: null,
-        clickedClass: { classroom: {name: null }, school: {email: null} },
+        teachings: null,
+        clickedTeaching: { subject: { name: null }, classroom: {name: null }, school: {email: null} },
+        studentGrades: null,
         students: null,
-        addpoints: { points: 0, student: '' },
-        subjects: { name: '' },
-        addabsence: { student: '', subject: '' }
+        form: { student: '', grade: '0' },
       }
     },
 
     created() {
-      this.getClasses()
+      this.getTeachings()
     },
 
     methods: {
-      getClasses() {
+      getTeachings() {
         const store = useStore()
         const config = { headers: { 'auth-token': store.token } }
         const body = { 'year': this.selectedYear }
 
-        this.classes = null
-        this.clickedClass.classroom.name = null
-        this.clickedClass.school.email = null
+        this.teachings = null
+        this.clickedTeaching.subject.name = null
+        this.clickedTeaching.classroom.name = null
+        this.clickedTeaching.school.email = null
+        this.studentGrades = null
         this.students = null
-        this.subjects = null
         
-        axios.post('/teacher/classrooms', body, config)
-          .then(response => this.classes = response.data.success.teachingClassrooms)
+        axios.post('/teacher/subjects', body, config)
+          .then(response => this.teachings = response.data.success.teachings)
           .catch(error => console.error(error))
       },
 
-      selectedClass(classroom) {
+      selectedTeaching(teaching) {
+        this.studentGrades = null
         this.students = null
-        this.subjects = null
-        this.clickedClass = classroom
-        this.getStudentsofClass(classroom)
+        this.clickedTeaching = teaching
+        this.getStudentsGradesofTeaching(teaching)
       },
 
-      getStudentsofClass(classroom) {
+      getStudentsGradesofTeaching(teaching) {
         const store = useStore()
         const config = { headers: { 'auth-token': store.token } }
         const body = { 'year': this.selectedYear,
-                       'schoolEmail': classroom.school.email,
-                       'classroomName': classroom.classroom.name }
+                       'schoolEmail': teaching.school.email,
+                       'subject': teaching.subject.name,
+                       'classroom': teaching.classroom.name }
         
-        axios.post('/teacher/classroom/students', body, config)
-          .then(response => this.students = response.data.success.students.Student)
-          .catch(error => console.error(error))
-
-        this.getTeachingsofClass(classroom)
-      },
-
-      getTeachingsofClass(classroom) {
-        const store = useStore()
-        const config = { headers: { 'auth-token': store.token } }
-        const body = { 'year': this.selectedYear,
-                       'schoolEmail': classroom.school.email,
-                       'classroomName': classroom.classroom.name }
-        
-        axios.post('/teacher/classroom/teachings', body, config)
-          .then(response => this.subjects = response.data.success.subjects)
-          .catch(error => console.error(error))
-      },
-
-      addPoints() {
-        const store = useStore()
-        const config = { headers: { 'auth-token': store.token } }
-        const body = { 'email': this.addpoints.student,
-                       'points': Number(this.addpoints.points) }
-
-        const toast = useToast()
-        console.log(this.clickedClass)
-
-        axios.post('/teacher/student/points', body, config, {raw: true})
+        axios.post('/teacher/teaching/grades', body, config)
           .then((response) => {
-            toast.success('Points were Added')
-            this.getStudentsofClass(this.clickedClass)
-          }).catch(() => { toast.error('There was an error') })
-
-        this.addpoints.addpoints = ''
-        this.addpoints.points = 0
+            this.studentGrades = response.data.success.teachingInfo.Grade
+            this.students = response.data.success.teachingInfo.classroom.Student
+          }).catch(() => { error => console.error(error) })
       },
 
-      addAbsence() {
+      getGrade(studentEmail) {
+        let result = this.studentGrades.filter(obj => {
+          return obj.student.email === studentEmail
+        })
+        if (result[0]) {
+          return result[0].grade
+        } else {
+          return ''
+        }
+      },
+
+      getDate(studentEmail) {
+        let result = this.studentGrades.filter(obj => {
+          return obj.student.email === studentEmail
+        })
+        if (result[0]) {
+          return result[0].date
+        } else {
+          return ''
+        }
+      },
+
+      addGrade() {
         const store = useStore()
         const config = { headers: { 'auth-token': store.token } }
-        const body = { 'studentEmail': this.addabsence.student,
+        const body = { 'studentEmail': this.form.student,
                        'year': this.selectedYear,
-                       'schoolEmail': this.clickedClass.school.email,
-                       'classroom': this.clickedClass.classroom.name,
-                       'subject': this.addabsence.subject }
+                       'schoolEmail': this.clickedTeaching.school.email,
+                       'classroom': this.clickedTeaching.classroom.name,
+                       'subject': this.clickedTeaching.subject.name,
+                       'grade': this.form.grade }
 
         const toast = useToast()
 
-        axios.post('/teacher/student/absence', body, config, {raw: true})
+        axios.post('/teacher/student/grade', body, config, {raw: true})
           .then((response) => {
-            toast.success('Absence was Added')
-            this.getStudentsofClass(this.clickedClass)
-          }).catch(() => { toast.error('There was an error') })
+            toast.success('Success')
+            this.getStudentsGradesofTeaching(this.clickedTeaching)
+          }).catch(() => { toast.error('Unexpected error occured') })
 
-        this.addabsence.student = ''
-        this.addabsence.subject = ''
-      }
-
+        this.form.student = ''
+        this.form.grade = '0'
+      },
     }
 
   }

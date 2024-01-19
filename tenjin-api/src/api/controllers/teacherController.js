@@ -330,43 +330,94 @@ const addPointsToStudent = async (req, res) => {
     }
 };
 
+const getGradesOfTeaching = async (req, res) => {
+    try {
+        const teacherId = req.user.id
+        const year = req.body.year
+        const schoolEmail = req.body.schoolEmail
+        const classroom = req.body.classroom
+        const subject = req.body.subject
+
+        const teachingInfo = await prisma.teaching.findFirstOrThrow({
+            where: {
+                year: year,
+                teacherId: teacherId,
+                school: { email: schoolEmail },
+                classroom: { name: classroom },
+                subject: { name: subject }
+            },
+            select: {
+                Grade: {
+                    select: {
+                        date: true,
+                        grade: true,
+                        student: {
+                            select: {
+                                name: true,
+                                surname: true,
+                                email: true
+                            }
+                        }
+                    }
+                },
+                classroom: {
+                    select: {
+                        Student: {
+                            select: {
+                                email: true,
+                                name: true,
+                                surname: true
+                            }
+                        }
+                    }
+                }
+            }
+        })
+
+        return res.status(200).json({ success: { teachingInfo } })
+    } catch (e) {
+        return res.status(500).json({ error: e })
+    }
+}
+
 const addGradeToStudent = async (req, res) => {
     try {
-        const teacherId = req.user.id;
-        const year = req.body.year;
-        const schoolName = req.body.school;
-        const studentEmail = req.body.email;
-        const classroomName = req.body.classroom;
-        const subjectName = req.body.subject;
-        const givenGrade = req.body.grade;
+        const teacherId = req.user.id
+        const year = req.body.year
+        const schoolEmail = req.body.schoolEmail
+        const studentEmail = req.body.studentEmail
+        const classroomName = req.body.classroom
+        const subjectName = req.body.subject
+        const givenGrade = req.body.grade
 
-        const student = await prisma.student.findUnique({
+        const student = await prisma.student.findUniqueOrThrow({
             where: {
                 email: studentEmail
             }
-        });
+        })
 
-        const school = await prisma.school.findUnique({
+        const school = await prisma.school.findUniqueOrThrow({
             where: {
-                name: schoolName,
+                email: schoolEmail,
             },
-        });
+        })
 
-        const classroom = await prisma.classroom.findFirst({
+        const classroom = await prisma.classroom.findFirstOrThrow({
             where: {
                 name: classroomName,
                 schoolId: school.id,
+                year: year
             },
-        });
+        })
 
-        const subject = await prisma.subject.findFirst({
+        const subject = await prisma.subject.findFirstOrThrow({
             where: {
                 name: subjectName,
                 yearLevel: classroom.yearLevel,
             },
-        });
+        })
 
-        const teaching = await prisma.teaching.findFirst({
+        const teaching = await prisma.teaching.findFirstOrThrow({
             where: {
                 year: year,
                 schoolId: school.id,
@@ -374,17 +425,38 @@ const addGradeToStudent = async (req, res) => {
                 teacherId: teacherId,
                 classroomId: classroom.id,
             },
-        });
+        })
 
-        const grade = await prisma.grade.create({
-            data: {
-                grade: givenGrade,
+        const existingGrade = await prisma.grade.findMany({
+            where: {
                 studentId: student.id,
                 teachingId: teaching.id
             }
-        });
+        })
 
-        return res.status(200).json({ success: { grade } });
+        let result
+        if (existingGrade.length === 0) {
+            result = await prisma.grade.create({
+                data: {
+                    grade: givenGrade,
+                    studentId: student.id,
+                    teachingId: teaching.id
+                }
+            })
+        } else {
+            result = await prisma.grade.updateMany({
+                where: {
+                    id: existingGrade.id,
+                    studentId: student.id,
+                    teachingId: teaching.id
+                },
+                data: {
+                    grade: givenGrade
+                }
+            })
+        }
+
+        return res.status(200).json({ success: { result } });
     } catch (e) {
         return res.status(500).json({ error: e });
     }
@@ -576,6 +648,7 @@ module.exports = {
     getStudentsOfClassroom,
     getTeachingsOfClassroom,
     addPointsToStudent,
+    getGradesOfTeaching,
     addGradeToStudent,
     getGradesOfStudents,
     addAbsenceToStudent,

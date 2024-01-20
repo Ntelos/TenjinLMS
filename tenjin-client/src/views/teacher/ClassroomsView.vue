@@ -76,7 +76,7 @@
 </template>
 
 <script setup>
-  import { ref } from 'vue'
+  import { ref, toHandlers } from 'vue'
   const showModal = ref(false)
 </script>
 
@@ -116,8 +116,35 @@
         this.subjects = null
         
         axios.post('/teacher/classrooms', body, config)
-          .then(response => this.classes = response.data.success.teachingClassrooms)
-          .catch(error => console.error(error))
+          .then((response) => {
+            
+            var classes = response.data.success.teachingClassrooms
+            var allUniqueClasses = []
+            
+            var uniqueSchools = Array.from( new Set( classes.reduce( (carry, current) => [...carry, current.school.email], [] ) ) )
+            console.log('Unique School values:', uniqueSchools)
+
+            uniqueSchools.forEach((currentElementSchool, indexSchool, arraySchool) => {
+              
+              var filteredSchoolsData = classes.filter(obj => { return obj.school.email === currentElementSchool })
+              console.log('Data for', currentElementSchool, filteredSchoolsData)
+
+              var uniqueClasses = Array.from( new Set( filteredSchoolsData.reduce( (carry, current) => [...carry, current.classroom.name], [] ) ) )
+              console.log('Unique Classes of school:', currentElementSchool, uniqueClasses)
+
+              uniqueClasses.forEach((currentElementClass, indexClass, arrayClass) => {
+                var uniqueClassData = filteredSchoolsData.find(obj => { return obj.classroom.name === currentElementClass })
+                console.log('Data for', currentElementClass, uniqueClassData)
+
+                allUniqueClasses.push(uniqueClassData)
+              })
+
+            })
+            
+            console.log('Unique Classes to be shown:', allUniqueClasses)
+            this.classes = allUniqueClasses
+
+          }).catch((error) => { console.error(error) })
       },
 
       selectedClass(classroom) {
@@ -133,7 +160,7 @@
         const body = { 'year': this.selectedYear,
                        'schoolEmail': classroom.school.email,
                        'classroomName': classroom.classroom.name }
-        
+        console.log(body)
         axios.post('/teacher/classroom/students', body, config)
           .then(response => this.students = response.data.success.students.Student)
           .catch(error => console.error(error))

@@ -221,7 +221,7 @@ const getStudentsOfClassroom = async (req, res) => {
             }
         })
 
-        const students = await prisma.classroom.findFirstOrThrow({
+        const students = await prisma.classroom.findFirst({
             where: {
                 schoolId: school.id,
                 name: classroomName,

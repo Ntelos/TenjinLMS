@@ -38,7 +38,7 @@
 
     data() {
       return {
-        year: '2022-23',
+        year: '2023-24',
         datax: null
       }
     },

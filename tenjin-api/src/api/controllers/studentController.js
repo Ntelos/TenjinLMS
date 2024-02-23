@@ -86,7 +86,7 @@ const getClassroom = (async (req, res) => {
             year = yearPrev
         }
 
-        const classroom = await prisma.classroom.findFirst({
+        const classroom = await prisma.classroom.findFirstOrThrow({
             where: {
                 year: year,
                 Student: {
@@ -94,6 +94,9 @@ const getClassroom = (async (req, res) => {
                         id: studentId
                     }
                 }
+            },
+            include: {
+                school: true
             }
         })
 
@@ -154,6 +157,10 @@ const getAbsences = (async (req, res) => {
                 }
             }
         });
+
+        absences.forEach((item, index) => {
+            item.date = item.date.toLocaleString()
+        })
 
         return res.status(200).json({success: { count: absences.length, absences } });
     } catch (e) {
@@ -216,6 +223,11 @@ const getTasks = (async (req, res) => {
                 }
             }
         })
+
+        tasks.forEach((item, index) => {
+            item.date = item.date.toLocaleString()
+        })
+
         return res.status(200).json({success: tasks})
 
     } catch (e) {

@@ -4,10 +4,11 @@ const  { addSchool, getSchool, getStudents,
          enrollStudent, getTeachers, employTeacher, 
          getClassrooms, addClassroom, getStudentsOfClassroom, 
          assignStudentToClassroom, getGradesOfStudent, 
-         getAbsencesOfStudent, assignTeaching, getTeachings, getUnassignedStudentsOfSchool } = require('../controllers/schoolController');
+         getAbsencesOfStudent, assignTeaching, getTeachings, getUnassignedStudentsOfSchool, patchSchool } = require('../controllers/schoolController');
 
 router.post('/', addSchool);
 router.get('/', authenticate, verifyRoleSet(["school"]), getSchool);
+router.patch('/', authenticate, verifyRoleSet(["school"]), patchSchool);
 
 router.post('/students', authenticate, verifyRoleSet(["school"]), getStudents);
 router.post('/student', authenticate, verifyRoleSet(["school"]), enrollStudent);

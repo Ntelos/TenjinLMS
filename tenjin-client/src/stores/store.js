@@ -83,8 +83,15 @@ export const useStore = defineStore('user', {
           headers: { 'auth-token': this.token }
         }
         const response = await axios.get('/student/classroom', config)
-        this.user.classroom = response.data.success.name
-        // console.log(this.user.classroom)
+          .then(response => {this.user.classroom = response.data.success.name;
+                             this.user.schoolId = response.data.success.school.id;
+                             this.user.schoolName = response.data.success.school.name;
+                             this.user.schoolAddress = response.data.success.school.address;
+                             this.user.schoolPhone = response.data.success.school.phone;})
+          .catch(error => { this.user.classroom = '';
+                            this.user.schoolId = ''; })
+        
+        
       } catch (error) {
         console.log(error)
       }

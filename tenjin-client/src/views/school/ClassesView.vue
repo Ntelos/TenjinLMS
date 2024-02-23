@@ -53,7 +53,7 @@
       <tr v-for="classroom in classrooms" v-on:click="clickClass(classroom)">
         <td>{{ classroom.name }}</td>
         <td>{{ classroom.yearLevel }}</td>
-        <td>{{ classroom._count.Student }}</td>
+        <td>{{ classroom._count.Student }}/20</td>
         <td>{{ classroom._count.Teaching }}</td>
       </tr>
     </table>
@@ -148,9 +148,9 @@
         axios.post('/school/classroom', body, config, {raw: true})
           .then((response) => {
             const res = response.data
-            // console.log(res)
             toast.success('Class added')
             this.getClasses()
+            
           }).catch(() => {
             toast.error('Unexpected error occured')
           })
@@ -178,10 +178,15 @@
         axios.post('/school/classrooms/student', body, config)
           .then((response) => {
             const res = response.data
-            // console.log(res)
-            toast.success('Student assigned to Class')
-            this.getClasses('X')
-            this.clickClass(this.clicked_classroom)
+            console.log(res)
+
+            if (res.success.issue === 'Max Capacity') {
+              toast.error('This Class is full')
+            } else {
+              toast.success('Student assigned to Class')
+              this.getClasses('X')
+              this.clickClass(this.clicked_classroom)
+            }
 
           }).catch(() => {
             toast.error('Unexpected error occured')

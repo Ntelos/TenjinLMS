@@ -69,7 +69,7 @@
             <label>Grade:</label>
             <input type="number" maxlength="2" min="0" max="20" step="0.5" required v-model="form.grade">
 
-            <div class="submit" @click="showModal = false">
+            <div class="submit">
               <button type="submit">Submit</button>
             </div>
           </form>

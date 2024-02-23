@@ -45,6 +45,30 @@ const getTeacher = async (req, res) => {
     }
 };
 
+const patchTeacher = async (req, res) => {
+    try {
+        const teacherId = req.user.id;
+        const name = req.body.name;
+        const surname = req.body.surname;
+        const phone = req.body.phone;
+
+        const teacher = await prisma.teacher.update({
+            where: {
+                id: teacherId,
+            },
+            data: {
+                name: name,
+                surname: surname,
+                phone: phone,
+            }
+        });
+
+        return res.status(200).json({ success: teacher.id });
+    } catch (e) {
+        return res.status(500).json({ error: e });
+    }
+};
+
 const getSchools = async (req, res) => {
     try {
         const teacherId = req.user.id;
@@ -142,6 +166,10 @@ const getTasksOfSubject = async (req, res) => {
                     }
                 }
             }
+        })
+
+        teaching.Task.forEach((item, index) => {
+            item.date = item.date.toLocaleString()
         })
 
         return res.status(200).json({ success: teaching });
@@ -372,6 +400,10 @@ const getGradesOfTeaching = async (req, res) => {
                     }
                 }
             }
+        })
+
+        teachingInfo.Grade.forEach((item, index) => {
+            item.date = item.date.toLocaleString()
         })
 
         return res.status(200).json({ success: { teachingInfo } })
@@ -652,5 +684,6 @@ module.exports = {
     addGradeToStudent,
     getGradesOfStudents,
     addAbsenceToStudent,
-    getAbsencesOfStudent
+    getAbsencesOfStudent,
+    patchTeacher
 };

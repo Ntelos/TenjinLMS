@@ -2,10 +2,11 @@ const router = require('express').Router();
 const  { authenticate, verifyRoleSet } = require('../middlewares/verifyToken');
 const  { addTeacher, getTeacher, getSchools, getSubjects, getClassrooms, getTasksOfSubject, addTaskToSubject, 
          getStudentsOfClassroom, getTeachingsOfClassroom, addPointsToStudent, getGradesOfTeaching, addGradeToStudent, getGradesOfStudents,
-         addAbsenceToStudent, getAbsencesOfStudent } = require('../controllers/teacherController');
+         addAbsenceToStudent, getAbsencesOfStudent, patchTeacher } = require('../controllers/teacherController');
 
 router.post('/', addTeacher);
 router.get('/', authenticate, verifyRoleSet(["teacher"]), getTeacher);
+router.patch('/', authenticate, verifyRoleSet(["teacher"]), patchTeacher);
 
 router.post('/schools', authenticate, verifyRoleSet(["teacher"]), getSchools);
 router.post('/subjects', authenticate, verifyRoleSet(["teacher"]), getSubjects);

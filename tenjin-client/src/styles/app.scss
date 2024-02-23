@@ -4,6 +4,7 @@
   --dark: #1e293b;
   --dark-alt: #334155;
   --light: #f1f5f9;
+  --light2: #edf2f7;
   --sidebar-width: 300px;
 }
 
@@ -46,4 +47,21 @@ button {
   color: var(--light);
   border-radius: 20px;
   cursor: pointer;
+}
+
+#profile_icon {
+  font-size: 132px;
+}
+.profile_card {
+  box-shadow: 0 4px 8px 0 rgba(0,0,0,0.3);
+  transition: 0.3s;
+  width: 40%;
+  text-align: center;
+  border-radius: 16px;
+  overflow: hidden;
+  margin-top: 16px;
+  background-color: var(--light2);
+}
+.profile_card:hover {
+  box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2);
 }

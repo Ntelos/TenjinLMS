@@ -40,6 +40,30 @@ const getSchool = (async (req, res) => {
     }
 })
 
+const patchSchool = (async (req, res) => {
+    try {
+        const schoolId = req.user.id;
+        const name = req.body.name;
+        const phone = req.body.phone;
+        const address = req.body.address;
+
+        const school = await prisma.school.update({
+            where: {
+                id: schoolId,
+            },
+            data: {
+                name: name,
+                phone: phone,
+                address: address
+            }
+        });
+
+        return res.status(200).json({ success: school.id });
+    } catch (e) {
+        return res.status(500).json({ error: e });
+    }
+})
+
 const getStudents = (async (req, res) => {
     try {
         const schoolId = req.user.id;
@@ -252,26 +276,43 @@ const assignStudentToClassroom = (async (req, res) => {
             }
         });
 
-        const student = await prisma.student.update({
+        const classroom_num = await prisma.classroom.findUniqueOrThrow({
             where: {
-                email: studentEmail
-            },
-            data: {
-                Classroom: {
-                    connect: {
-                        id: classroom.id,
-                    }
-                }
+                id: classroom.id,
             },
             select: {
-                name: true,
-                surname: true
+                _count: {
+                  select: { 
+                    Student: true
+                 }
+                },
             }
         });
 
-        return res.status(200).json({success: {student: student} });
+        if ( classroom_num._count < 20 ) {
+            const student = await prisma.student.update({
+                where: {
+                    email: studentEmail
+                },
+                data: {
+                    Classroom: {
+                        connect: {
+                            id: classroom.id,
+                        }
+                    }
+                },
+                select: {
+                    name: true,
+                    surname: true
+                }
+            })
+            return res.status(200).json({success: {student: student} })
+        }
+        else {
+            return res.status(200).json({success: {issue: 'Max Capacity'} })
+        }
     } catch (e) {
-        return res.status(500).json({error: e});
+        return res.status(500).json({error: e})
     }
 })
 
@@ -308,6 +349,10 @@ const getGradesOfStudent = (async (req, res) => {
                     }
                 }
             }
+        })
+
+        grades.forEach((item, index) => {
+            item.date = item.date.toLocaleString()
         })
 
         return res.status(200).json({success: {student: student.name.concat(' ', student.surname), grades: grades} });
@@ -348,6 +393,10 @@ const getAbsencesOfStudent = (async (req, res) => {
                     }
                 }
             }
+        })
+
+        absences.forEach((item, index) => {
+            item.date = item.date.toLocaleString()
         })
 
         return res.status(200).json({success: {student: student.name.concat(' ', student.surname), count: absences.length, absences: absences} });
@@ -499,5 +548,5 @@ module.exports = {
     enrollStudent, getTeachers, employTeacher, 
     getClassrooms, addClassroom, getStudentsOfClassroom, 
     assignStudentToClassroom, getGradesOfStudent, 
-    getAbsencesOfStudent, assignTeaching, getTeachings, getUnassignedStudentsOfSchool
+    getAbsencesOfStudent, assignTeaching, getTeachings, getUnassignedStudentsOfSchool, patchSchool
 }

@@ -178,8 +178,7 @@
         axios.post('/school/classrooms/student', body, config)
           .then((response) => {
             const res = response.data
-            console.log(res)
-
+            // console.log(res)
             if (res.success.issue === 'Max Capacity') {
               toast.error('This Class is full')
             } else {

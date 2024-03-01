@@ -47,6 +47,11 @@
         <span class="text">Classes</span>
     </router-link>
 
+    <router-link v-if="store.role === 'school'" class="button" :to="{ name: 'allsubjects' }">
+        <span class="material-icons">menu_book</span>
+        <span class="text">Subjects</span>
+    </router-link>
+
     <!-- Teachers -->
     <router-link v-if="store.role === 'teacher'" class="button" :to="{ name: 'teachings' }">
         <span class="material-icons">list_alt</span>

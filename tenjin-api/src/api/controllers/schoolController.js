@@ -287,9 +287,9 @@ const assignStudentToClassroom = (async (req, res) => {
                  }
                 },
             }
-        });
-
-        if ( classroom_num._count < 20 ) {
+        })
+        
+        if ( classroom_num._count.Student < 20 ) {
             const student = await prisma.student.update({
                 where: {
                     email: studentEmail
@@ -378,6 +378,7 @@ const getAbsencesOfStudent = (async (req, res) => {
                 teaching: { year: year }
             },
             select: {
+                id: true,
                 date: true,
                 teaching: { 
                     select: { 
@@ -400,6 +401,29 @@ const getAbsencesOfStudent = (async (req, res) => {
         })
 
         return res.status(200).json({success: {student: student.name.concat(' ', student.surname), count: absences.length, absences: absences} });
+    } catch (e) {
+        return res.status(500).json({error: e});
+    }
+})
+
+const deleteAbsencesOfStudent = (async (req, res) => {
+    try {
+        const absenceId = req.params.absenceId;
+
+        const absence = await prisma.absence.delete({
+            where: {
+                id: absenceId
+            },
+            select: {
+                student: {
+                    select: {
+                        email: true
+                    }
+                }
+            }
+        })
+
+        return res.status(200).json({success: absence });
     } catch (e) {
         return res.status(500).json({error: e});
     }
@@ -548,5 +572,5 @@ module.exports = {
     enrollStudent, getTeachers, employTeacher, 
     getClassrooms, addClassroom, getStudentsOfClassroom, 
     assignStudentToClassroom, getGradesOfStudent, 
-    getAbsencesOfStudent, assignTeaching, getTeachings, getUnassignedStudentsOfSchool, patchSchool
+    getAbsencesOfStudent, deleteAbsencesOfStudent, assignTeaching, getTeachings, getUnassignedStudentsOfSchool, patchSchool
 }

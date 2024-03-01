@@ -110,7 +110,7 @@
         </div>
 
         <div class="submit" >
-            <button type="submit">Register</button>
+            <button :disabled="isButtonDisabled" type="submit">Register</button>
         </div>
 
     </form>
@@ -152,20 +152,40 @@ export default {
                 email: '',
                 password: '',
                 phone: ''
-            }
+            },
           },
+          isButtonDisabled: false
       }
   },
 
   methods: {
     async handleSubmit() {
-      const success_flag = await this.store.register(this.form)
-        
-      if (success_flag) {
-        this.toast.success('Register action was successful!')
-        this.$router.replace({ name: 'login' })
-      } else {
-        this.toast.error('Register action was not successful')
+      this.isButtonDisabled = true
+      this.toast.warning('Contacting Πανελλήνιο Σχολικό Δίκτυο, might take some time')
+      const status = await this.store.register(this.form)
+
+      switch (status) {
+        case 201:
+          this.toast.success('Register action was successful!')
+          this.isButtonDisabled = false
+          this.$router.replace({ name: 'login' })
+          break
+        case 400:
+          this.toast.error('Password must be stronger')
+          this.isButtonDisabled = false
+          break
+        case 409:
+          this.toast.error('Name or Email already in use')
+          this.isButtonDisabled = false
+          break
+        case 999:
+          this.toast.error(`Email not in Greek School's Network`)
+          this.isButtonDisabled = false
+          break
+        default:
+          this.toast.error('Register action was not successful')
+          this.isButtonDisabled = false
+          break
       }
     }
   }

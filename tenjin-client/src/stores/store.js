@@ -38,18 +38,49 @@ export const useStore = defineStore('user', {
     },
 
     async register(information) {
-      try {
-        let response = 'predifed response'
-        if (information.role === 'school') {
-          response = await axios.post(`/${information.role}`, information.school_data)
-        } else {
-          response = await axios.post(`/${information.role}`, information.other_data)  
+      const flag = await this.checkEmail(information)
+      // console.log(flag)
+
+      if (flag) {
+        try {
+          let response = 'predifed response'
+          if (information.role === 'school') {
+            response = await axios.post(`/${information.role}`, information.school_data)
+          } else {
+            response = await axios.post(`/${information.role}`, information.other_data)  
+          }
+          return response.status
+        } catch (error) {
+          return error.response.status
         }
-        console.log(response)
-        return true
-      } catch (error) {
-        console.log(error)
-        return false
+      } else {
+        return 999
+      }
+    },
+
+    async checkEmail(info) {
+      console.log('Contacting sch.gr...')
+      switch (info.role) {
+        case 'school':
+          const body = { 'education_level': 'ΔΕΥΤΕΡΟΒΑΘΜΙΑ',
+                         'state': 'ΕΝΕΡΓΗ',
+                         'email': info.school_data.email }
+
+          const res = await axios.get('https://mm.sch.gr/api/units', { params: { education_level: 'ΔΕΥΤΕΡΟΒΑΘΜΙΑ',
+                                                                                 state: 'ΕΝΕΡΓΗ',
+                                                                                 email: info.school_data.email } })
+            .then((response) => {
+              // console.log(response.data.total)
+              if (response.data.total === 0) {
+                return false
+              }
+              return true
+            }).catch((e) => { console.log(e) })
+            return res
+        case 'teacher':
+          return true
+        case 'student':
+          return true
       }
     },
 

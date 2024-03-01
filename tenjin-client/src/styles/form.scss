@@ -47,6 +47,11 @@ form .submit {
 text-align: center;
 }
 
+form .submit :disabled{
+    background: #4444444d;
+    cursor: not-allowed;
+}
+
 form .goto {
 text-align: center;
 font-size: small;

@@ -124,6 +124,19 @@ const routes = [
       next()
     }
   },
+  {
+    path: '/allsubjects',
+    name: 'allsubjects',
+    component: () => import('@/views/school/allSubjectsView.vue'),
+    beforeEnter: (to, from, next) => {
+      if (!useStore().authenticated) {
+        return next({
+          name: 'login'
+        })
+      }
+      next()
+    }
+  },
   //Teacher
   {
     path: '/teachings',

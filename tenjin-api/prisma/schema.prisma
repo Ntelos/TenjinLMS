@@ -52,6 +52,7 @@ model School {
 model Subject {
   id          String     @id @unique @default(cuid())
   name        String
+  description String?
   yearLevel   String
   weeklyHours Int?
   Teaching    Teaching[]

@@ -22,14 +22,30 @@
         </tr>
       </thead>
       <tr v-for="d in datax.Teaching">
-        <td>{{ d.subject.name }}</td>
+        <td class="subject_button"><span v-on:click="clickSubject(d)" @click="showModalInfo = true">{{ d.subject.name }}</span></td>
         <td>{{ d.subject.weeklyHours }}</td>
         <td>{{ d.teacher.name }} {{ d.teacher.surname }}</td>
       </tr>
     </table>
 
+    <Teleport to="body">
+      <ModalInfo :show="showModalInfo" @close="showModalInfo = false">
+        <template #body>
+          <h2>{{ clicked_subject.name }}</h2>
+          <br>
+          <label>{{ clicked_subject.description }}</label>
+        </template>
+      </ModalInfo>
+    </Teleport>
+
   </main>
 </template>
+
+<script setup>
+  import ModalInfo from '@/views/ModalInfo.vue'
+  import { ref } from 'vue'
+  const showModalInfo = ref(false)
+</script>
 
 <script>
   import { useStore } from '@/stores/store'
@@ -40,7 +56,8 @@
     data() {
       return {
         year: '2023-24',
-        datax: { yearLevel: null, Teaching: null }
+        datax: { yearLevel: null, Teaching: null },
+        clicked_subject: { name: '', description: '' }
       }
     },
 
@@ -63,6 +80,11 @@
         axios.post('/student/subjects', body, config)
           .then(response => this.datax = response.data.success)
           .catch(error => console.error(error))
+      },
+
+      clickSubject(d) {
+        this.clicked_subject.name = d.subject.name
+        this.clicked_subject.description = d.subject.description
       }
     }
 

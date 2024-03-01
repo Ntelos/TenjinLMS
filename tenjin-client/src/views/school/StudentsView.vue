@@ -73,12 +73,14 @@
             <th>Date/Time</th>
             <th>Subject</th>
             <th>Teacher</th>
+            <th>Remove</th>
           </tr>
         </thead>
         <tr v-for="absence in absences.absences">
           <td>{{ absence.date }}</td>
           <td>{{ absence.teaching.subject.name }}</td>
           <td>{{ absence.teaching.teacher.surname }} {{ absence.teaching.teacher.name }}</td>
+          <td class="remove_button" v-on:click="removeAbsense(absence)"><span class="material-icons">remove_circle_outline</span></td>
         </tr>
       </table>
       <br>
@@ -192,6 +194,26 @@
         axios.post('/school/students/grades', body, config)
           .then(response => this.grades = response.data.success)
           .catch(error => console.error(error))
+      },
+
+      removeAbsense(absence) {
+        const store = useStore()
+        const toast = useToast()
+
+        const config = { headers: { 'auth-token': store.token } }
+
+        axios.delete(`/school/students/absence/${absence.id}`, config)
+          .then(response => {
+            if (response.status = 200) {
+              // console.log(response)
+              // console.log(`Deleted Absence with ID ${absence.id}`)
+              toast.success('Absence Deleted')
+              this.getAbsences(response.data.success.student.email)
+            } else {
+              toast.error('Could not delete Absence')
+            }
+          })
+          .catch(error => { console.error(error) })
       }
     },
 

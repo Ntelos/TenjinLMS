@@ -131,6 +131,29 @@ const getTeacherInfo = (async (req, res) => {
     }
 })
 
+const getSubjects = (async (req, res) => {
+    try {
+        const subjects = await prisma.subject.findMany()
+        return res.status(200).json({subjects: subjects})
+    } catch (e) {
+        return res.status(500).json({error: e})
+    }
+})
+
+const getSubjectInfo = (async (req, res) => {
+    try {
+        const subjectId = req.params.subjectId
+        const subject = await prisma.subject.findFirstOrThrow({
+            where: {
+                id: subjectId
+            }
+        })
+        return res.status(200).json({subject: subject})
+    } catch (e) {
+        return res.status(500).json({error: e})
+    }
+})
+
 const addSubject = (async (req, res) => {
     try {
         const subjectData = req.body;
@@ -165,6 +188,8 @@ module.exports = {
     getSchoolInfo,
     getTeachers, 
     getTeacherInfo,
+    getSubjects,
+    getSubjectInfo,
     addSubject,
     addSubjects
 }

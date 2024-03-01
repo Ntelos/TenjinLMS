@@ -114,7 +114,7 @@ table {
 
 .table-hover {
     tr:hover {
-        background-color: var(--primary);
+        background-color: var(--primary50);
         cursor: pointer;
     }
 }
@@ -165,4 +165,24 @@ table {
 .table-bordered tbody:last-child tr:last-child td:last-child,
 %table-bordered tbody:last-child tr:last-child td:last-child {
     border-radius: 0 0 $table-bordered-child-radius 0;
+}
+
+.remove_button {
+    span:hover {
+        
+        background-color: #d44848;
+        cursor: pointer;
+        border-radius: $table-bordered-border-radius;
+    }
+}
+
+.subject_button{
+    span {
+        text-decoration: underline;
+        color: var(--dark);
+    }
+
+    span:hover {
+        cursor: pointer;
+    }
 }

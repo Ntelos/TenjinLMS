@@ -160,8 +160,11 @@ export default {
 
   methods: {
     async handleSubmit() {
-      this.isButtonDisabled = true
+      if (this.form.role === 'school') {
+        this.isButtonDisabled = true
       this.toast.warning('Contacting Πανελλήνιο Σχολικό Δίκτυο, might take some time')
+      }
+      
       const status = await this.store.register(this.form)
 
       switch (status) {

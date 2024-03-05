@@ -1,15 +1,15 @@
 <template>
   <main id="TeachersView">
-    <h1>Teachers</h1>
+    <h1>{{ $t("menu.teachers") }}</h1>
     <br>
-    <label>Period: </label>
+    <label>{{ $t("texts.Period") }}: </label>
     <select v-model="year" @change="getTeachers(), getClasses()">
         <option value="2022-23">2022-23</option>
         <option value="2023-24">2023-24</option>
         <option value="2024-25">2024-25</option>
     </select>
     <br><br>
-    <button class="but" id="show-modal" @click="showModal = true">Employ Teacher</button>
+    <button class="but" id="show-modal" @click="showModal = true">{{ $t("texts.Employ Teacher") }}</button>
     <br><br>
 
     <Teleport to="body">
@@ -17,13 +17,13 @@
         <template #body>
           <form @submit.prevent="employTeacher">
 
-            <div class="title">Employ a Teacher</div>
+            <div class="title">{{ $t("texts.Employ Teacher") }}</div>
 
             <label>Email:</label>
             <input type="email" maxlength="50" required v-model="form.email">
 
             <div class="submit" @click="showModal = false">
-                <button type="submit">Employ</button>
+                <button type="submit">{{ $t("texts.Submit") }}</button>
             </div>
           </form>
         </template>
@@ -33,9 +33,9 @@
     <table class="table table-bordered table-hover">
       <thead>
         <tr>
-          <th>Name</th>
+          <th>{{ $t("texts.Name") }}</th>
           <th>Email</th>
-          <th>Phone</th>
+          <th>{{ $t("texts.Phone") }}</th>
         </tr>
       </thead>
       <tr v-for="teacher in teachers" v-on:click="clickTeacher(teacher)">
@@ -45,26 +45,26 @@
       </tr>
     </table>
 
-    <h2>Teachings of Teacher {{ clickedTeacher.surname }} {{ clickedTeacher.name }}</h2>
+    <h2>{{ $t("texts.Teachings of Teacher") }} {{ clickedTeacher.surname }} {{ clickedTeacher.name }}</h2>
     <br>
     <div v-if="teachings == null">
-      <p>Select a Teacher</p>
+      <p>{{ $t("texts.Select a Teacher") }}</p>
     </div>
     <div v-else>
-      <label>Subject: </label>
+      <label>{{ $t("texts.Subject") }}: </label>
       <input v-model="teaching.subject" placeholder="subject name" />
-      <label> to Class: </label>
+      <label> {{ $t("texts.to Class") }}: </label>
       <select v-model="teaching.class">
         <option v-for="classs in classes" :value="classs.name"> {{ classs.name }}</option>
       </select>
-      <button class="but" @click="assignTeaching()">Assign new Teaching</button>
+      <button class="but" @click="assignTeaching()">{{ $t("texts.Assign new Teaching") }}</button>
       <br><br>
       <table class="table table-bordered">
       <thead>
         <tr>
-          <th>Class</th>
-          <th>Subject</th>
-          <th>Hours/Week</th>
+          <th>{{ $t("texts.Class") }}</th>
+          <th>{{ $t("texts.Subject") }}</th>
+          <th>{{ $t("texts.HoursWeek") }}</th>
         </tr>
       </thead>
       <tr v-for="teaching in teachings">

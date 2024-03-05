@@ -1,25 +1,25 @@
 <template>
     <main id="AbsencesView">
-      <h1>Absences</h1>
+      <h1>{{ $t("menu.absences") }}</h1>
   
       <br>
-      <label>Period: </label>
+      <label>{{ $t("texts.Period") }}: </label>
       <select v-model="year" @change="onChange()">
           <option value="2022-23">2022-23</option>
           <option value="2023-24">2023-24</option>
       </select>
       <br><br>
 
-      <label>Total Absences: {{ datax.count }}</label>
+      <label>{{ $t("texts.Total Absences") }}: {{ datax.count }}</label>
       <br><br>
 
       <table class="table table-bordered">
         <thead>
           <tr>
-            <th>Date/Time</th>
-            <th>Year Level</th>
-            <th>Subject</th>
-            <th>Teacher</th>
+            <th>{{ $t("texts.Date") }}</th>
+            <th>{{ $t("texts.Year Level") }}</th>
+            <th>{{ $t("texts.Subject") }}</th>
+            <th>{{ $t("texts.Teacher") }}</th>
           </tr>
         </thead>
         <tr v-for="d in datax.absences">

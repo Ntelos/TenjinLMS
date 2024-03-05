@@ -4,20 +4,20 @@
 
     <form @submit.prevent="handleSubmit">
 
-      <div class="title">Login</div>
+      <div class="title">{{ $t("home.Login") }}</div>
 
       <label>Email:</label>
       <input type="email" minlength="6" maxlength="50" required v-model="form.email">
 
-      <label>Password:</label>
+      <label>{{ $t("home.Password") }}:</label>
       <input type="password" minlength="6" maxlength="30" required v-model="form.password">
 
       <div class="submit" >
-          <button type="submit">Login</button>
+          <button type="submit">{{ $t("home.Login") }}</button>
       </div>
 
       <div class="goto">
-        <span @click="gotoRegister">Register</span>
+        <span @click="gotoRegister">{{ $t("home.Register") }}</span>
       </div>
 
     </form>

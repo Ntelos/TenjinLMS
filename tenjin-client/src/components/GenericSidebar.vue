@@ -14,6 +14,15 @@
         <div class="menu">
             <NavigationMenu/>
         </div>
+
+        <div class="lang-toggle">
+            <div>
+                <button @click="$i18n.locale='en'">EN</button>
+            </div>
+            <div>
+                <button @click="$i18n.locale='gr'">ΕΛ</button>
+            </div>
+        </div>
     </aside>
 </template>
 

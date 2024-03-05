@@ -1,12 +1,12 @@
 <template>
   <main id="TasksView">
-    <h1>Tasks</h1>
+    <h1>{{ $t("menu.tasks") }}</h1>
 
     <br>
-    <label>Period: {{ year }}</label>
+    <label>{{ $t("texts.Period") }}: {{ year }}</label>
     <br><br>
 
-    <label>Subject: </label>
+    <label>{{ $t("texts.Subject") }}: </label>
     <select v-model="subject" @change="onChange()">
       <option v-for="s in subjects.Teaching" :value="s">{{s.subject.name}}</option>
     </select>
@@ -15,10 +15,10 @@
     <table class="table table-bordered">
       <thead>
         <tr>
-          <th>Title</th>
-          <th>Points</th>
-          <th>Active</th>
-          <th>Date</th>
+          <th>{{ $t("texts.Description") }}</th>
+          <th>{{ $t("texts.Points") }}</th>
+          <th>{{ $t("texts.Active") }}</th>
+          <th>{{ $t("texts.Date") }}</th>
         </tr>
       </thead>
       <tr v-for="d in datax">

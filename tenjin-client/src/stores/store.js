@@ -10,6 +10,7 @@ export const useStore = defineStore('user', {
     role: '',
     email: '',
     token: '',
+    locale: 'en',
     user: Object //{name:'', surname:'', email:'', phone:'', points:'', classroomId:'', address:'', town:'', district:''}
   }),
   

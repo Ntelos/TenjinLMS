@@ -1,9 +1,9 @@
 <template>
   <main id="TeacherGradesView">
-    <h1>Classes</h1>
+    <h1>{{ $t("menu.classes") }}</h1>
     <br>
 
-    <label>Period: </label>
+    <label>{{ $t("texts.Period") }}: </label>
     <select v-model="selectedYear" @change="getClasses()">
       <option value="2022-23">2022-23</option>
       <option value="2023-24">2023-24</option>
@@ -14,8 +14,8 @@
     <table class="table table-bordered table-hover">
       <thead>
         <tr>
-          <th>School</th>
-          <th>Classroom</th>
+          <th>{{ $t("texts.School") }}</th>
+          <th>{{ $t("texts.Classroom") }}</th>
         </tr>
       </thead>
       <tr v-for="classroom in classes" v-on:click="selectedClass(classroom)">
@@ -24,41 +24,41 @@
       </tr>
     </table>
 
-    <h2>Students of Classroom {{ this.clickedClass.classroom.name }}</h2>
+    <h2>{{ $t("texts.Students of Classroom") }} {{ this.clickedClass.classroom.name }}</h2>
     <br>
     <div v-if="clickedClass.classroom.name === null">
-      <p>Select a Classroom</p>
+      <p>{{ $t("texts.Select a Classroom") }}</p>
       <br>
     </div>
     <div v-else>
-      <label>Add Points: </label>
+      <label>{{ $t("texts.Add Points") }}: </label>
       <input v-model="addpoints.points" placeholder="points" type="number" />
-      <label> to Student: </label>
+      <label> {{ $t("texts.to Student") }}: </label>
       <select v-model="addpoints.student">
         <option v-for="student in students" :value="student.email">{{ student.surname }} {{ student.name }}</option>
       </select>
-      <button class="but" @click="addPoints()">Add Points</button>
+      <button class="but" @click="addPoints()">{{ $t("texts.Add Points") }}</button>
       <br><br>
 
-      <label>Add Absence to Student: </label>
+      <label>{{ $t("texts.Add Absence to Student") }}: </label>
       <select v-model="addabsence.student">
         <option v-for="student in students" :value="student.email">{{ student.surname }} {{ student.name }}</option>
       </select>
-      <label> for Teaching: </label>
+      <label> {{ $t("texts.for Teaching") }}: </label>
       <select v-model="addabsence.subject">
         <option v-for="subject in subjects" :value="subject.subject.name">{{ subject.subject.name }}</option>
       </select>
-      <button class="but" @click="addAbsence()">Add Absence</button>
+      <button class="but" @click="addAbsence()">{{ $t("texts.Add Absence") }}</button>
       <br><br>
 
       <table class="table table-bordered">
         <thead>
           <tr>
-            <th>Surname</th>
-            <th>Name</th>
+            <th>{{ $t("texts.Surname") }}</th>
+            <th>{{ $t("texts.Name") }}</th>
             <th>Email</th>
-            <th>Phone</th>
-            <th>Points</th>
+            <th>{{ $t("texts.Phone") }}</th>
+            <th>{{ $t("texts.Points") }}</th>
           </tr>
         </thead>
         <tr v-for="student in students">

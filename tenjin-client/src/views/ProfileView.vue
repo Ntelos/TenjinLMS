@@ -1,6 +1,6 @@
 <template>
   <main id="ProfileView">
-    <h1>Profile</h1>
+    <h1>{{ $t("pagetitles.profile") }}</h1>
     <div v-if="store.role === 'school'">
       <SchoolProfile/>
     </div>

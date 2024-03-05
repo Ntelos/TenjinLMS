@@ -1,9 +1,9 @@
 <template>
   <main id="ClassroomsView">
-    <h1>Teachings</h1>
+    <h1>{{ $t("menu.teachings") }}</h1>
     <br>
 
-    <label>Period: </label>
+    <label>{{ $t("texts.Period") }}: </label>
     <select v-model="selectedYear" @change="getTeachings()">
       <option value="2022-23">2022-23</option>
       <option value="2023-24">2023-24</option>
@@ -14,9 +14,9 @@
     <table class="table table-bordered table-hover">
       <thead>
         <tr>
-          <th>School</th>
-          <th>Classroom</th>
-          <th>Subject</th>
+          <th>{{ $t("texts.School") }}</th>
+          <th>{{ $t("texts.Classroom") }}</th>
+          <th>{{ $t("texts.Subject") }}</th>
         </tr>
       </thead>
       <tr v-for="teaching in teachings" v-on:click="selectedTeaching(teaching)">
@@ -26,22 +26,22 @@
       </tr>
     </table>
 
-    <h2>Grades of Teaching {{ this.clickedTeaching.subject.name }} {{ this.clickedTeaching.classroom.name }} {{ this.clickedTeaching.school.name }}</h2>
+    <h2>{{ $t("texts.Grades of Teaching") }} {{ this.clickedTeaching.subject.name }} {{ this.clickedTeaching.classroom.name }} {{ this.clickedTeaching.school.name }}</h2>
     <br>
     <div v-if="clickedTeaching.subject.name === null">
-      <p>Select a Teaching</p>
+      <p>{{ $t("texts.Select a Teaching") }}</p>
       <br>
     </div>
     <div v-else>
-      <button class="but" id="show-modal" @click="showModal = true">Submit/Update Grade</button>
+      <button class="but" id="show-modal" @click="showModal = true">{{ $t("texts.SubmitUpdate Grade") }}</button>
       <br><br>
 
       <table class="table table-bordered">
         <thead>
           <tr>
-            <th>Student</th>
+            <th>{{ $t("texts.Student") }}</th>
             <th>Email</th>
-            <th>Grade</th>
+            <th>{{ $t("texts.Grade") }}</th>
             <th>Date</th>
           </tr>
         </thead>
@@ -59,18 +59,18 @@
       <modal :show="showModal" @close="showModal = false">
         <template #body>
           <form @submit.prevent="addGrade">
-            <div class="title">Submit/Update Grade</div>
+            <div class="title">{{ $t("texts.SubmitUpdate Grade") }}</div>
 
-            <label>Student:</label>
+            <label>{{ $t("texts.Student") }}:</label>
             <select v-model="form.student" required>
               <option v-for="student in students" :value="student.email">{{ student.surname }} {{ student.name }}</option>
             </select>
 
-            <label>Grade:</label>
+            <label>{{ $t("texts.Grade") }}:</label>
             <input type="number" maxlength="2" min="0" max="20" step="0.5" required v-model="form.grade">
 
             <div class="submit">
-              <button type="submit">Submit</button>
+              <button type="submit">{{ $t("texts.Submit") }}</button>
             </div>
           </form>
         </template>

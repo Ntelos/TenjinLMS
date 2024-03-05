@@ -1,9 +1,9 @@
 <template>
   <main id="ClassesView">
-    <h1>Classes</h1>
+    <h1>{{ $t("menu.classes") }}</h1>
     <br>
 
-    <label>Period: </label>
+    <label>{{ $t("texts.Period") }}: </label>
     <select v-model="year" @change="getClasses()">
       <option value="2022-23">2022-23</option>
       <option value="2023-24">2023-24</option>
@@ -11,19 +11,19 @@
     </select>
 
     <br><br>
-    <button class="but" id="show-modal" @click="showModal = true">Add a Class</button>
+    <button class="but" id="show-modal" @click="showModal = true">{{ $t("texts.Add a Class") }}</button>
     <br><br>
 
     <Teleport to="body">
       <modal :show="showModal" @close="showModal = false">
         <template #body>
           <form @submit.prevent="addClass">
-            <div class="title">Add a Class</div>
+            <div class="title">{{ $t("texts.Add a Class") }}</div>
 
-            <label>Class Name:</label>
+            <label>{{ $t("texts.Name") }}:</label>
             <input type="text" minlength="2" maxlength="2" required v-model="form.name">
 
-            <label>Class Level:</label>
+            <label>{{ $t("texts.Year Level") }}:</label>
             <select v-model="form.yearLevel">
               <option value="A">A</option>
               <option value="B">B</option>
@@ -34,7 +34,7 @@
             </select>
 
             <div class="submit" @click="showModal = false">
-              <button type="submit">Add</button>
+              <button type="submit">{{ $t("texts.Submit") }}</button>
             </div>
           </form>
         </template>
@@ -44,10 +44,10 @@
     <table class="table table-bordered table-hover">
       <thead>
         <tr>
-          <th>Name</th>
-          <th>Year Level</th>
-          <th>Students</th>
-          <th>Teachings</th>
+          <th>{{ $t("texts.Name") }}</th>
+          <th>{{ $t("texts.Year Level") }}</th>
+          <th>{{ $t("texts.Students") }}</th>
+          <th>{{ $t("texts.Teachings") }}</th>
         </tr>
       </thead>
       <tr v-for="classroom in classrooms" v-on:click="clickClass(classroom)">
@@ -59,24 +59,24 @@
     </table>
     <br>
 
-    <h2>Students of Class {{ clicked_classroom.name }}</h2>
+    <h2>{{ $t("texts.Students of Class") }} {{ clicked_classroom.name }}</h2>
     <br>
     <div v-if="classroom_students == null">
-      <p>Select a Class</p>
+      <p>{{ $t("texts.Select a Class") }}</p>
     </div>
     <div v-else>
-      <label>Student: </label>
+      <label>{{ $t("texts.Student") }}: </label>
       <select v-model="student.email">
         <option v-for="student in unassigned_students" :value="student.student.email">{{student.student.surname}} {{student.student.name}} ({{ student.yearLevel }})</option>
       </select>
-      <button class="but" @click="assignStudent()">Assign</button>
+      <button class="but" @click="assignStudent()">{{ $t("texts.Assign") }}</button>
       <br><br>
       <table class="table table-bordered">
         <thead>
           <tr>
-            <th>Name</th>
+            <th>{{ $t("texts.Name") }}</th>
             <th>Email</th>
-            <th>Phone</th>
+            <th>{{ $t("texts.Phone") }}</th>
           </tr>
         </thead>
         <tr v-for="student in classroom_students">

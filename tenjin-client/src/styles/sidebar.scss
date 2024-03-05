@@ -57,6 +57,20 @@ aside {
         text-transform: uppercase;
     }
 
+    .lang-toggle {
+        position: absolute;
+        bottom: 0;
+        margin-bottom: 1rem;
+        div {
+            button {
+                color: var(--grey);
+                font-size: 0.875rem;
+                margin-bottom: 0.5rem;
+                width: 2rem;
+            }
+        }
+    }
+
     .menu {
         margin: 0 -1rem;
 

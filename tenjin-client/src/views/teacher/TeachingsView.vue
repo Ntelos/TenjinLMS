@@ -1,9 +1,9 @@
 <template>
   <main id="TeachingsView">
-    <h1>Teachings</h1>
+    <h1>{{ $t("menu.teachings") }}</h1>
     <br>
 
-    <label>Period: </label>
+    <label>{{ $t("texts.Period") }}: </label>
     <select v-model="selectedYear" @change="getTeachings()">
       <option value="2022-23">2022-23</option>
       <option value="2023-24">2023-24</option>
@@ -14,11 +14,11 @@
     <table class="table table-bordered table-hover">
       <thead>
         <tr>
-          <th>School</th>
-          <th>Classroom</th>
-          <th>Subject</th>
-          <th>Year Level</th>
-          <th>Hours/Week</th>
+          <th>{{ $t("texts.School") }}</th>
+          <th>{{ $t("texts.Classroom") }}</th>
+          <th>{{ $t("texts.Subject") }}</th>
+          <th>{{ $t("texts.Year Level") }}</th>
+          <th>{{ $t("texts.HoursWeek") }}</th>
         </tr>
       </thead>
       <tr v-for="teaching in teachings" v-on:click="selectedTeaching(teaching)">
@@ -30,23 +30,23 @@
       </tr>
     </table>
 
-    <h2>Tasks of Teaching {{ this.clickedTeaching.subject.name }} {{ this.clickedTeaching.classroom.name }}</h2>
+    <h2>{{ $t("texts.Tasks of Teaching") }} {{ this.clickedTeaching.subject.name }} {{ this.clickedTeaching.classroom.name }}</h2>
     <br>
     <div v-if="clickedTeaching.subject.name === null">
-      <p>Select a Teaching</p>
+      <p>{{ $t("texts.Select a Teaching") }}</p>
       <br>
     </div>
     <div v-else>
-      <button class="but" id="show-modal" @click="showModal = true">Add new Task</button>
+      <button class="but" id="show-modal" @click="showModal = true">{{ $t("texts.Add new Task") }}</button>
       <br><br>
 
       <table class="table table-bordered">
         <thead>
           <tr>
-            <th>Task</th>
-            <th>Points</th>
-            <th>Active</th>
-            <th>Date</th>
+            <th>{{ $t("texts.Task") }}</th>
+            <th>{{ $t("texts.Points") }}</th>
+            <th>{{ $t("texts.Active") }}</th>
+            <th>{{ $t("texts.Date") }}</th>
           </tr>
         </thead>
         <tr v-for="task in tasks">
@@ -63,16 +63,16 @@
       <modal :show="showModal" @close="showModal = false">
         <template #body>
           <form @submit.prevent="handleSubmit">
-            <div class="title">Add a new Task</div>
+            <div class="title">{{ $t("texts.Add new Task") }}</div>
 
-            <label>Task:</label>
+            <label>{{ $t("texts.Task") }}:</label>
             <input type="text" maxlength="300" required v-model="form.task">
 
-            <label>Points:</label>
+            <label>{{ $t("texts.Points") }}:</label>
             <input type="number" maxlength="4" required v-model="form.points">
 
             <div class="submit" @click="showModal = false">
-              <button type="submit">Add</button>
+              <button type="submit">{{ $t("texts.Add") }}</button>
             </div>
           </form>
         </template>

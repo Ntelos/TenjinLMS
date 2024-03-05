@@ -11,7 +11,7 @@
             Email: {{ store.user.email }}
         </div>
         <div class="phone">
-            Phone: {{ store.user.phone }}
+          {{ $t("profile.Phone") }}: {{ store.user.phone }}
         </div>
         <div class="address">
             <br>
@@ -21,7 +21,7 @@
         </div>
         <span class="material-icons" id="profile_icon">domain</span>
         <br>
-        <button class="but" id="show-modal" @click="updateInit(); showModal = true">Update Info</button>
+        <button class="but" id="show-modal" @click="updateInit(); showModal = true">{{ $t("profile.Update Info") }}</button>
         <br><br>
     </div>
 
@@ -29,22 +29,22 @@
       <Modal :show="showModal" @close="showModal = false">
         <template #body>
           <form @submit.prevent="updateInfo">
-            <div class="title">Update Information</div>
+            <div class="title">{{ $t("profile.Update Information") }}</div>
 
-            <label>Name:</label>
+            <label>{{ $t("profile.Name") }}:</label>
             <input type="text" maxlength="50" v-model="form.name">
 
             <label>Email:</label>
             <input type="email" disabled v-model="form.email">
 
-            <label>Phone:</label>
+            <label>{{ $t("profile.Phone") }}:</label>
             <input type="phone" minlength="10" maxlength="10" v-model="form.phone">
 
-            <label>Address:</label>
+            <label>{{ $t("profile.Address") }}:</label>
             <input type="text" maxlength="50" v-model="form.address">
 
             <div class="submit">
-              <button type="submit" @click="showModal = false">Update</button>
+              <button type="submit" @click="showModal = false">{{ $t("profile.Update") }}</button>
             </div>
           </form>
         </template>

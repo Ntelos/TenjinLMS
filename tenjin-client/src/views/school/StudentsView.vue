@@ -1,9 +1,9 @@
 <template>
   <main id="StudentsView">
-    <h1>Students</h1>
+    <h1>{{ $t("menu.students") }}</h1>
     <br>
 
-    <label>Period: </label>
+    <label>{{ $t("texts.Period") }}: </label>
     <select v-model="year" @change="getStudents()">
       <option value="2022-23">2022-23</option>
       <option value="2023-24">2023-24</option>
@@ -11,19 +11,19 @@
     </select>
 
     <br><br>
-    <button class="but" id="show-modal" @click="showModal = true">Enroll Student</button>
+    <button class="but" id="show-modal" @click="showModal = true">{{ $t("texts.Enroll Student") }}</button>
     <br><br>
 
     <Teleport to="body">
       <modal :show="showModal" @close="showModal = false">
         <template #body>
           <form @submit.prevent="handleSubmit">
-            <div class="title">Enroll a Student</div>
+            <div class="title">{{ $t("texts.Enroll Student") }}</div>
 
             <label>Email:</label>
             <input type="email" maxlength="50" required v-model="form.email">
 
-            <label>Year Level:</label>
+            <label>{{ $t("texts.Year Level") }}:</label>
             <select v-model="form.yearLevel">
               <option value="A">A</option>
               <option value="B">B</option>
@@ -34,7 +34,7 @@
             </select>
 
             <div class="submit" @click="showModal = false">
-              <button type="submit">Enroll</button>
+              <button type="submit">{{ $t("texts.Submit") }}</button>
             </div>
           </form>
         </template>
@@ -44,10 +44,10 @@
     <table class="table table-bordered table-hover">
       <thead>
         <tr>
-          <th>Name</th>
+          <th>{{ $t("texts.Name") }}</th>
           <th>Email</th>
-          <th>Phone</th>
-          <th>Year Level</th>
+          <th>{{ $t("texts.Phone") }}</th>
+          <th>{{ $t("texts.Year Level") }}</th>
         </tr>
       </thead>
       <tr v-for="student in students"  v-on:click="clickStudent(student)">
@@ -58,22 +58,22 @@
       </tr>
     </table>
 
-    <h2>Absences of Student {{ absences.student }}</h2>
+    <h2>{{ $t("texts.Absences of Student") }} {{ absences.student }}</h2>
     <br>
     <div v-if="absences.student == null">
-      <p>Select a Student</p>
+      <p>{{ $t("texts.Select a Student") }}</p>
       <br>
     </div>
     <div v-else>
-      <h3>Total Absences: {{ absences.count }}</h3>
+      <h3>{{ $t("texts.Total Absences") }}: {{ absences.count }}</h3>
       <br>
       <table class="table table-bordered">
         <thead>
           <tr>
-            <th>Date/Time</th>
-            <th>Subject</th>
-            <th>Teacher</th>
-            <th>Remove</th>
+            <th>{{ $t("texts.Date") }}</th>
+            <th>{{ $t("texts.Subject") }}</th>
+            <th>{{ $t("texts.Teacher") }}</th>
+            <th>{{ $t("texts.Remove") }}</th>
           </tr>
         </thead>
         <tr v-for="absence in absences.absences">
@@ -86,20 +86,20 @@
       <br>
     </div>
 
-    <h2>Grades of Student {{ grades.student }}</h2>
+    <h2>{{ $t("texts.Grades of Student") }} {{ grades.student }}</h2>
     <br>
     <div v-if="grades.student == null">
-      <p>Select a Student</p>
+      <p>{{ $t("texts.Select a Student") }}</p>
       <br>
     </div>
     <div v-else>
       <table class="table table-bordered">
         <thead>
           <tr>
-            <th>Subject</th>
-            <th>Grade</th>
-            <th>Teacher</th>
-            <th>Date/Time</th>
+            <th>{{ $t("texts.Subject") }}</th>
+            <th>{{ $t("texts.Grade") }}</th>
+            <th>{{ $t("texts.Teacher") }}</th>
+            <th>{{ $t("texts.Date") }}</th>
           </tr>
         </thead>
         <tr v-for="grade in grades.grades">

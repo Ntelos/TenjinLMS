@@ -4,20 +4,20 @@
 
     <form @submit.prevent="handleSubmit">
 
-        <div class="title">Register</div>
+        <div class="title">{{ $t("home.Register") }}</div>
 
-        <label>Register as a:</label>
-        <select v-model="form.role">
-            <option value="school">School</option>
-            <option value="teacher">Teacher</option>
-            <option value="student">Student</option>
+        <label>{{ $t("home.Register as a") }}:</label>
+        <select v-model="form.role" disabled>
+            <option value="school">{{ $t("home.School") }}</option>
+            <option value="teacher">{{ $t("home.Teacher") }}</option>
+            <option value="student">{{ $t("home.Student") }}</option>
         </select>
 
         <div v-if="form.role === 'school'">
-            <label>Name:</label>
+            <label>{{ $t("home.Name") }}:</label>
             <input type="text" minlength="3" maxlength="100" required v-model="form.school_data.name">
 
-            <label>District:</label>
+            <label>{{ $t("home.District") }}:</label>
             <select v-model="form.school_data.district">
                 <option value="Νομός Αθηνών">Νομός Αθηνών</option>
                 <option value="Νομός Αιτωλοακαρνανίας">Νομός Αιτωλοακαρνανίας</option>
@@ -75,42 +75,42 @@
                 <option value="Νομός Χίου">Νομός Χίου</option>
             </select>
 
-            <label>Town:</label>
+            <label>{{ $t("home.Town") }}:</label>
             <input type="text" minlength="3" maxlength="50" required v-model="form.school_data.town">
 
-            <label>Address:</label>
+            <label>{{ $t("home.Address") }}:</label>
             <input type="text" minlength="3" maxlength="100" required v-model="form.school_data.address">
 
             <label>Email:</label>
             <input type="email" minlength="6" maxlength="50" required v-model="form.school_data.email">
 
-            <label>Password:</label>
+            <label>{{ $t("home.Password") }}:</label>
             <input type="password" minlength="6" maxlength="30" required v-model="form.school_data.password">
 
-            <label>Phone:</label>
+            <label>{{ $t("home.Phone") }}:</label>
             <input type="tel" minlength="10" maxlength="10" required v-model="form.school_data.phone">
         </div>
 
 
         <div v-else>
-            <label>Name:</label>
+            <label>{{ $t("home.Name") }}:</label>
             <input type="text" minlength="3" maxlength="50" required v-model="form.other_data.name">
 
-            <label>Surname:</label>
+            <label>{{ $t("home.Surname") }}:</label>
             <input type="text" minlength="3" maxlength="50" required v-model="form.other_data.surname">
 
             <label>Email:</label>
             <input type="email" minlength="6" maxlength="50" required v-model="form.other_data.email">
 
-            <label>Password:</label>
+            <label>{{ $t("home.Password") }}:</label>
             <input type="password" minlength="6" maxlength="30" required v-model="form.other_data.password">
 
-            <label>Phone:</label>
+            <label>{{ $t("home.Phone") }}:</label>
             <input type="tel" minlength="10" maxlength="10" required v-model="form.other_data.phone">
         </div>
 
         <div class="submit" >
-            <button :disabled="isButtonDisabled" type="submit">Register</button>
+            <button :disabled="isButtonDisabled" type="submit">{{ $t("home.Register") }}</button>
         </div>
 
     </form>

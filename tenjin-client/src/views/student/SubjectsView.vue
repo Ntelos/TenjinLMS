@@ -1,24 +1,24 @@
 <template>
   <main id="SubjectsView">
-    <h1>Subjects</h1>
+    <h1>{{ $t("menu.subjects") }}</h1>
 
     <br>
-    <label>Period: </label>
+    <label>{{ $t("texts.Period") }}: </label>
     <select v-model="year" @change="onChange()">
         <option value="2022-23">2022-23</option>
         <option value="2023-24">2023-24</option>
     </select>
     <br><br>
 
-    <label>Year Level: {{ datax.yearLevel }}</label>
+    <label>{{ $t("texts.Year Level") }}: {{ datax.yearLevel }}</label>
     <br><br>
     
     <table class="table table-bordered">
       <thead>
         <tr>
-          <th>Subject</th>
-          <th>Hours/Week</th>
-          <th>Teacher</th>
+          <th>{{ $t("texts.Subject") }}</th>
+          <th>{{ $t("texts.HoursWeek") }}</th>
+          <th>{{ $t("texts.Teacher") }}</th>
         </tr>
       </thead>
       <tr v-for="d in datax.Teaching">

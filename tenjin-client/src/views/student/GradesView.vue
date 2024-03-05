@@ -1,9 +1,9 @@
 <template>
   <main id="GradesView">
-    <h1>Grades</h1>
+    <h1>{{ $t("menu.grades") }}</h1>
 
     <br>
-    <label>Period: </label>
+    <label>{{ $t("texts.Period") }}: </label>
     <select v-model="year" @change="onChange()">
         <option value="2022-23">2022-23</option>
         <option value="2023-24">2023-24</option>
@@ -13,10 +13,10 @@
     <table class="table table-bordered">
 			<thead>
 				<tr>
-					<th>Grade</th>
-          <th>Year Level</th>
-					<th>Subject</th>
-					<th>Teacher</th>
+					<th>{{ $t("texts.Grade") }}</th>
+          <th>{{ $t("texts.Year Level") }}</th>
+					<th>{{ $t("texts.Subject") }}</th>
+					<th>{{ $t("texts.Teacher") }}</th>
 				</tr>
 			</thead>
 			<tr v-for="d in datax">

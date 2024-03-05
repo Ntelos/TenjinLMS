@@ -11,7 +11,7 @@
 
         <div class="modal-footer">
           <slot name="footer">
-            <button class="modal-default-button" @click="$emit('close')" >Back</button>
+            <button class="modal-default-button" @click="$emit('close')" >{{ $t("home.Back") }}</button>
           </slot>
         </div>
       </div>

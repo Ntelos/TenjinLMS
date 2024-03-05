@@ -12,22 +12,22 @@
             Email: {{ store.user.email }}
         </div>
         <div class="phone">
-            Phone: {{ store.user.phone }}
+            {{ $t("profile.Phone") }}: {{ store.user.phone }}
         </div>
         <div class="points">
             <div v-if="store.user.points !== null">
-                Points: {{ store.user.points }}
+                {{ $t("profile.Phone") }}: {{ store.user.points }}
             </div>
             <div v-else>
-                Points: 0
+                {{ $t("profile.Points") }}: 0
             </div>
         </div>
         <div class="class">
             <div v-if="store.user.classroom !== ''">
-                Class: {{ store.user.classroom }}
+                {{ $t("profile.Class") }}: {{ store.user.classroom }}
             </div>
             <div v-else>
-                Currently not assigned at a Class
+                {{ $t("profile.Currently not assigned at a Class") }}
             </div>
         </div>
         <span class="material-icons" id="profile_icon">school</span>
@@ -36,7 +36,7 @@
     <div class="profile_card">
         <div v-if="store.user.schoolId !== ''">
             <br>
-            <h2>School's Info</h2>
+            <h2>{{ $t("profile.Schools Info") }}</h2>
             <br>
             <div>{{ store.user.schoolName }}</div>
             <div>{{ store.user.schoolAddress }}</div>

@@ -1,27 +1,27 @@
 <template>
   <main id="allSubjectsView">
 
-    <h1>Subjects</h1>
+    <h1>{{ $t("menu.subjects") }}</h1>
     <br>
-    <label>Maintain all Subjects</label>
+    <label>{{ $t("texts.Maintain all Subjects") }}</label>
 
     <br><br>
-    <button class="but" id="show-modal" @click="showModal = true">Add a Subject</button>
+    <button class="but" id="show-modal" @click="showModal = true">{{ $t("texts.Add a Subject") }}</button>
     <br><br>
 
     <Teleport to="body">
       <modal :show="showModal" @close="showModal = false">
         <template #body>
           <form @submit.prevent="addSubject">
-            <div class="title">Add a Subject</div>
+            <div class="title">{{ $t("texts.Add a Subject") }}</div>
 
-            <label>Name:</label>
+            <label>{{ $t("texts.Name") }}:</label>
             <input type="text" minlength="3" maxlength="35" required v-model="form.name">
 
-            <label>Description:</label>
-            <input type="text" maxlength="100" v-model="form.description">
+            <label>{{ $t("texts.Description") }}:</label>
+            <input type="text" maxlength="190" v-model="form.description">
 
-            <label>Level:</label>
+            <label>{{ $t("texts.Year Level") }}:</label>
             <select v-model="form.yearLevel">
               <option value="A">A</option>
               <option value="B">B</option>
@@ -31,11 +31,11 @@
               <option value="F">F</option>
             </select>
 
-            <label>Weekly Hours:</label>
+            <label>{{ $t("texts.HoursWeek") }}:</label>
             <input type="number" min="1" v-model="form.weeklyHours">
 
             <div class="submit" @click="showModal = false">
-              <button type="submit">Add</button>
+              <button type="submit">{{ $t("texts.Add") }}</button>
             </div>
           </form>
         </template>
@@ -45,9 +45,9 @@
     <table class="table table-bordered">
       <thead>
         <tr>
-          <th>Name</th>
-          <th>Level</th>
-          <th>Weekly Hours</th>
+          <th>{{ $t("texts.Name") }}</th>
+          <th>{{ $t("texts.Year Level") }}</th>
+          <th>{{ $t("texts.HoursWeek") }}</th>
         </tr>
       </thead>
       <tr v-for="subject in subjects">

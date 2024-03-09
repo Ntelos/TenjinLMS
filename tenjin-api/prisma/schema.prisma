@@ -63,6 +63,7 @@ model Classroom {
   name      String
   year      String
   yearLevel String
+  capacity  Int
   school    School     @relation(fields: [schoolId], references: [id])
   schoolId  String
   Student   Student[]

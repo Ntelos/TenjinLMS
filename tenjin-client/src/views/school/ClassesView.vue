@@ -33,6 +33,9 @@
               <option value="F">F</option>
             </select>
 
+            <label>{{ $t("texts.Capacity") }}:</label>
+            <input type="number" min=0 required v-model="form.capacity">
+
             <div class="submit" @click="showModal = false">
               <button type="submit">{{ $t("texts.Submit") }}</button>
             </div>
@@ -53,7 +56,7 @@
       <tr v-for="classroom in classrooms" v-on:click="clickClass(classroom)">
         <td>{{ classroom.name }}</td>
         <td>{{ classroom.yearLevel }}</td>
-        <td>{{ classroom._count.Student }}/20</td>
+        <td>{{ classroom._count.Student }}/{{ classroom.capacity }}</td>
         <td>{{ classroom._count.Teaching }}</td>
       </tr>
     </table>
@@ -106,7 +109,7 @@
     data() {
       return {
         year: '2023-24',
-        form: { name: '', yearLevel: 'A' },
+        form: { name: '', yearLevel: 'A', capacity: 0 },
         classrooms: null,
         clicked_classroom: { name: '', yearLevel: '' },
         classroom_students: null,
@@ -140,7 +143,8 @@
         const store = useStore()
         const body = { 'name': this.form.name,
                        'year': this.year,
-                       'yearLevel': this.form.yearLevel }
+                       'yearLevel': this.form.yearLevel,
+                       'capacity': this.form.capacity }
         const config = { headers: { 'auth-token': store.token } }
 
         const toast = useToast()

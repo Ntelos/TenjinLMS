@@ -7,7 +7,7 @@
         <div class="title">{{ $t("home.Register") }}</div>
 
         <label>{{ $t("home.Register as a") }}:</label>
-        <select v-model="form.role" disabled>
+        <select v-model="form.role">
             <option value="school">{{ $t("home.School") }}</option>
             <option value="teacher">{{ $t("home.Teacher") }}</option>
             <option value="student">{{ $t("home.Student") }}</option>

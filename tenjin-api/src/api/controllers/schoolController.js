@@ -191,6 +191,7 @@ const getClassrooms = (async (req, res) => {
             select: {
                 name: true,
                 yearLevel: true,
+                capacity: true,
                 _count: {
                   select: { 
                     Student: true,
@@ -215,6 +216,7 @@ const addClassroom = (async (req, res) => {
                 name: req.body.name,
                 year: req.body.year,
                 yearLevel: req.body.yearLevel,
+                capacity: req.body.capacity,
                 schoolId: schoolId
             }
         });
@@ -281,6 +283,7 @@ const assignStudentToClassroom = (async (req, res) => {
                 id: classroom.id,
             },
             select: {
+                capacity: true,
                 _count: {
                   select: { 
                     Student: true
@@ -289,7 +292,7 @@ const assignStudentToClassroom = (async (req, res) => {
             }
         })
         
-        if ( classroom_num._count.Student < 20 ) {
+        if ( classroom_num._count.Student < classroom_num.capacity ) {
             const student = await prisma.student.update({
                 where: {
                     email: studentEmail

@@ -42,7 +42,7 @@
       </modal>
     </Teleport>
     
-    <table class="table table-bordered">
+    <!-- <table class="table table-bordered">
       <thead>
         <tr>
           <th>{{ $t("texts.Name") }}</th>
@@ -55,7 +55,15 @@
         <td>{{ subject.yearLevel }}</td>
         <td>{{ subject.weeklyHours }}</td>
       </tr>
-    </table>
+    </table> -->
+
+    <div class="card" v-for="subject in subjects">
+      <div>
+        <p class="subject_button"><span v-on:click="clickSubject(subject)" @click="showModalInfo = true">{{ subject.name }}</span></p>
+        <p>{{ $t("texts.Year Level") }}: {{ subject.yearLevel }}</p>
+        <p>{{ $t("texts.HoursWeek") }}: {{ subject.weeklyHours }}</p>
+      </div>
+    </div>
 
     <Teleport to="body">
       <ModalInfo :show="showModalInfo" @close="showModalInfo = false">

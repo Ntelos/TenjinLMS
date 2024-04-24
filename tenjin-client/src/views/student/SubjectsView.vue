@@ -30,7 +30,7 @@
 
     <div class="card" v-for="d in datax.Teaching">
       <div>
-        <p class="subject_button"><span v-on:click="clickSubject(d)" @click="showModalInfo = true"><b>{{ d.subject.name }}</b></span></p>
+        <p class="subject_button"><span v-on:click="clickSubject(d)" @click="showModalInfo = true">{{ d.subject.name }}</span></p>
         <p>{{ $t("texts.HoursWeek") }}: {{ d.subject.weeklyHours }}</p>
         <p>{{ d.teacher.surname }} {{ d.teacher.name }}</p>
       </div>

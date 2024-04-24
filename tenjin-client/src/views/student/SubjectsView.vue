@@ -13,7 +13,7 @@
     <label>{{ $t("texts.Year Level") }}: {{ datax.yearLevel }}</label>
     <br><br>
     
-    <table class="table table-bordered">
+    <!-- <table class="table table-bordered">
       <thead>
         <tr>
           <th>{{ $t("texts.Subject") }}</th>
@@ -26,7 +26,15 @@
         <td>{{ d.subject.weeklyHours }}</td>
         <td>{{ d.teacher.name }} {{ d.teacher.surname }}</td>
       </tr>
-    </table>
+    </table> -->
+
+    <div class="card" v-for="d in datax.Teaching">
+      <div>
+        <p class="subject_button"><span v-on:click="clickSubject(d)" @click="showModalInfo = true"><b>{{ d.subject.name }}</b></span></p>
+        <p>{{ $t("texts.HoursWeek") }}: {{ d.subject.weeklyHours }}</p>
+        <p>{{ d.teacher.surname }} {{ d.teacher.name }}</p>
+      </div>
+    </div>
 
     <Teleport to="body">
       <ModalInfo :show="showModalInfo" @close="showModalInfo = false">

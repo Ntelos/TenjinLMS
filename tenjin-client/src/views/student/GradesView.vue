@@ -10,7 +10,7 @@
     </select>
     <br><br>
     
-    <table class="table table-bordered">
+    <!-- <table class="table table-bordered">
 			<thead>
 				<tr>
 					<th>{{ $t("texts.Grade") }}</th>
@@ -25,7 +25,18 @@
         <td>{{ d.teaching.subject.name }}</td>
         <td>{{ d.teaching.teacher.surname }} {{ d.teaching.teacher.name }}</td>
 			</tr>
-		</table>
+		</table> -->
+
+    <div class="card grade" v-for="d in datax">
+      <div class="card-child">
+        <p><b>{{ d.teaching.subject.name }}</b></p>
+        <p>{{ $t("texts.Year Level") }}: {{ d.teaching.subject.yearLevel }}</p>
+        <p>{{ d.teaching.teacher.surname }} {{ d.teaching.teacher.name }}</p>
+      </div>
+      <div class="card-child" id="grade">
+        <p>{{ $t("texts.Grade") }}: {{ d.grade }}</p>
+      </div>
+    </div>
 
   </main>
 </template>

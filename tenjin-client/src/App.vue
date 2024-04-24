@@ -14,4 +14,5 @@
   @import "@/styles/table.scss";
   @import "@/styles/modal.scss";
   @import "@/styles/form.scss";
+  @import "@/styles/card.scss";
 </style>

@@ -200,6 +200,7 @@ const addTaskToSubject = async (req, res) => {
             where: {
                 name: classroomName,
                 schoolId: school.id,
+                year: year
             },
         });
 

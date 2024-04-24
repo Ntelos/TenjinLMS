@@ -16,7 +16,7 @@
         </div>
         <div class="points">
             <div v-if="store.user.points !== null">
-                {{ $t("profile.Phone") }}: {{ store.user.points }}
+                {{ $t("profile.Points") }}: {{ store.user.points }}
             </div>
             <div v-else>
                 {{ $t("profile.Points") }}: 0

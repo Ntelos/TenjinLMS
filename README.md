@@ -130,6 +130,9 @@ For any other use, please contact the author.
 ## 🔗 Author
 
 **Panteleimon Kampouris**
-- Department of Information and Electronic Engineering
-- Faculty of Informatics and Electronic Systems 
-- International Hellenic University  
+
+Department of Information and Electronic Engineering
+
+Faculty of Informatics and Electronic Systems 
+
+International Hellenic University  

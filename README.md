@@ -17,6 +17,12 @@ The system is designed with modular architecture, ensuring scalability, usabilit
 
 ---
 
+## 📸 Demo Video
+
+Watch [here](https://youtu.be/XiYUwNigSqI) the walkthrough video of TenjinLMS.
+
+---
+
 ## 🎯 Key Features
 
 ### 👩‍🏫 School Administration
@@ -108,6 +114,7 @@ The full thesis (in Greek) includes:
 - 👨‍💼 Complete User Manual (School, Teacher, Student)
 
 You can find the API documentation [here](https://documenter.getpostman.com/view/21713918/2sA2xiWrhB).
+
 ---
 
 ## 🤝 Acknowledgments

@@ -72,26 +72,26 @@ The system is designed with modular architecture, ensuring scalability, usabilit
    ```
 
 2. Configure environment variables:
-   - Create `.env` files in `/backend/` and `/frontend/`
+   - Create `.env` files in `/tenjin-api/` and `/tenjin-client/`
    - Add your MySQL credentials, JWT secret, etc.
 
-3. Install dependencies:
+3. Install dependencies to both environments:
    ```bash
-   cd backend
+   cd tenjin-api
    npm install
 
-   cd ../frontend
+   cd ../tenjin-client
    npm install
    ```
 
 4. Run development servers:
    ```bash
    # Start backend server
-   cd backend
+   cd ../tenjin-api
    npm run dev
 
    # Start frontend app
-   cd ../frontend
+   cd ../tenjin-client
    npm run serve
    ```
 

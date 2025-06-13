@@ -55,21 +55,7 @@ The system is designed with modular architecture, ensuring scalability, usabilit
 
 ---
 
-## 📂 Repository Structure
-
-```bash
-TenjinLMS/
-│
-├── backend/          # Node.js REST API
-├── frontend/         # Vue.js Single Page Application
-├── prisma/           # Prisma schema and migrations
-├── docs/             # Thesis PDF, ER diagrams, API docs
-└── README.md
-```
-
----
-
-## 🚀 Getting Started
+## 🚀 Getting Started / Run it yourself
 
 ### Prerequisites
 
@@ -121,6 +107,7 @@ The full thesis (in Greek) includes:
 - 🧪 Testing using Postman and dummy data
 - 👨‍💼 Complete User Manual (School, Teacher, Student)
 
+You can find the API documentation [here](https://documenter.getpostman.com/view/21713918/2sA2xiWrhB).
 ---
 
 ## 🤝 Acknowledgments
